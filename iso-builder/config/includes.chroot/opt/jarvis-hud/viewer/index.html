@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jarvis OS · Ambient Core & Apple Multi-Theme Desktop</title>
+  <link rel="stylesheet" href="styles/desktop.css">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(13, 17, 23, 0.85);
+      --border: rgba(56, 189, 248, 0.2);
+      --border-bright: #38bdf8;
+      --cyan: #38bdf8;
+      --purple: #a855f7;
+      --green: #22c55e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+    }
+
+    /* 3D Canvas / Galaxy Space */
+    #galaxy-canvas {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+    }
+
+    /* Top HUD Bar */
+    header {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 56px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 24px; z-index: 10;
+      background: linear-gradient(180deg, rgba(7, 9, 14, 0.9) 0%, rgba(7, 9, 14, 0) 100%);
+      pointer-events: none;
+    }
+
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      font-size: 15px; color: var(--cyan); pointer-events: auto;
+    }
+
+    .brand-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--cyan); box-shadow: 0 0 12px var(--cyan);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .hud-status {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; pointer-events: auto;
+    }
+
+    .badge-tag {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 12px;
+      color: var(--cyan); font-size: 11px; font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    #status-badge {
+      position: absolute; top: 68px; left: 50%; transform: translateX(-50%);
+      z-index: 20; background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-bright);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+      border-radius: 20px; padding: 6px 18px; font-size: 12px;
+      letter-spacing: 0.08em; display: flex; gap: 12px;
+      opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    }
+    #status-badge.visible { opacity: 1; }
+
+    #side-panel {
+      position: absolute; top: 76px; right: 24px; width: 360px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      backdrop-filter: blur(16px); border-radius: 12px; padding: 20px;
+      z-index: 15; transform: translateX(400px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    #side-panel.open { transform: translateX(0); }
+    #side-panel h3 { font-size: 16px; color: var(--cyan); margin-bottom: 8px; }
+    #side-panel p { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+    #side-panel .close-btn {
+      position: absolute; top: 12px; right: 12px; background: none;
+      border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;
+    }
+
+    .hud-bottom {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      width: min(840px, 92vw); z-index: 20;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .output-stream {
+      background: var(--card-bg); border: 1px solid var(--border);
+      backdrop-filter: blur(20px); border-radius: 12px;
+      padding: 16px 20px; min-height: 60px; max-height: 220px;
+      overflow-y: auto; font-size: 14px; line-height: 1.6;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .output-text { color: var(--text); }
+    .output-meta { font-size: 11px; color: var(--cyan); display: flex; gap: 12px; }
+
+    .input-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border);
+      border-radius: 14px; padding: 8px 14px; backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .input-bar:focus-within {
+      border-color: var(--border-bright);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
+    }
+    .input-bar input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 14px;
+    }
+    .mic-button {
+      background: rgba(56, 189, 248, 0.15); border: 1px solid var(--cyan);
+      color: var(--cyan); width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .send-button {
+      background: var(--cyan); border: none; color: #030712;
+      font-weight: 600; font-size: 12px; padding: 8px 16px;
+      border-radius: 8px; cursor: pointer; transition: opacity 0.2s;
+    }
+    .send-button:hover { opacity: 0.9; }
+  </style>
+</head>
+<body class="env-ambient">
+
+  <!-- ==================== 1. JARVIS AMBIENT CORE (3D HUD) ==================== -->
+  <div id="ambient-shell">
+    <header>
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span>JARVIS OS · KNOWLEDGE GALAXY</span>
+      </div>
+      <div class="hud-status">
+        <button id="mode-btn" class="badge-tag" style="cursor: pointer; background: rgba(56, 189, 248, 0.18); border: 1px solid var(--cyan);" onclick="window.DesktopOS.switchEnvironment('desktop')">🖥️ SWITCH TO DESKTOP (APPLE / THEMES)</button>
+        <span id="indexed-count" class="badge-tag">5 NODES INDEXED</span>
+        <span class="badge-tag" style="border-color: var(--green); color: var(--green);">100% AIR-GAPPED</span>
+        <span id="latency-stat">STANDBY</span>
+      </div>
+    </header>
+
+    <div id="status-badge">
+      <span id="badge-brain">BRAIN: local (Bonsai 27B)</span>
+      <span>|</span>
+      <span id="badge-voice">VOICE: local (Kokoro-82M)</span>
+    </div>
+
+    <canvas id="galaxy-canvas"></canvas>
+
+    <div id="side-panel">
+      <button class="close-btn" onclick="closePanel()">✕</button>
+      <h3 id="panel-title">Node Title</h3>
+      <p id="panel-excerpt">Node excerpt content...</p>
+    </div>
+
+    <div class="hud-bottom">
+      <div class="output-stream" id="output-stream">
+        <div class="output-text" id="agent-speech">"Hello, sir. Operating system and knowledge galaxy standing by."</div>
+        <div class="output-meta">
+          <span id="brain-tag">BRAIN: LOCAL</span>
+          <span id="source-tag">SOURCES: INITIAL SYSTEM GRAPH</span>
+        </div>
+      </div>
+
+      <div class="input-bar">
+        <button class="mic-button" id="mic-btn" title="Push-to-talk / Hands-free">🎤</button>
+        <input type="text" id="user-input" placeholder="Ask Jarvis, type 'open desktop', 'remember that...', or 'switch to Claude'..." />
+        <button class="send-button" id="send-btn">TRANSMIT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. APPLE / MULTI-THEME DESKTOP ENVIRONMENT ==================== -->
+  <div id="desktop-shell" data-theme="cupertino-dark" data-buttons="left">
+    <div id="desktop-wallpaper"></div>
+
+    <!-- Top macOS-style Global Menu Bar -->
+    <nav id="mac-menubar">
+      <div class="menubar-left">
+        <button class="menu-item active-app" id="menubar-apple-btn" title="Jarvis System Menu"></button>
+        <span class="menu-item active-app" id="menubar-active-app">Finder</span>
+        <button class="menu-item" data-app="finder">File</button>
+        <button class="menu-item" data-app="terminal">Terminal</button>
+        <button class="menu-item" data-app="software">Software</button>
+        <button class="menu-item" data-app="themes">Themes</button>
+      </div>
+      <div class="menubar-right">
+        <button class="menu-pill" id="de-switch-jarvis" onclick="window.DesktopOS.switchEnvironment('jarvis')">◈ Switch to Jarvis Core</button>
+        <span class="menu-item" id="de-vram-pill" style="font-size:11.5px; opacity:0.85;">VRAM Freed</span>
+        <button class="menu-item" id="menubar-spotlight-btn" title="Spotlight Search (Ctrl+K)">🔍</button>
+        <button class="menu-item" id="menubar-cc-btn" title="Control Center & Themes">🎛️</button>
+        <span class="menu-item" id="menubar-clock">--:--</span>
+      </div>
+    </nav>
+
+    <!-- Apple System Dropdown Menu -->
+    <div id="apple-dropdown">
+      <button class="sidebar-btn" style="width:100%;" data-app="monitor">About Jarvis OS (Debian 12)</button>
+      <button class="sidebar-btn" style="width:100%;" data-app="themes">System Settings & Themes...</button>
+      <button class="sidebar-btn" style="width:100%;" data-app="software">Software Center (APT / Flatpak)...</button>
+      <button class="sidebar-btn" style="width:100%;" data-app="terminal">Open Terminal (zsh)...</button>
+      <hr style="border:none; border-top:1px solid var(--de-border); margin:6px 0;" />
+      <button class="sidebar-btn" style="width:100%; color:var(--de-accent);" onclick="window.DesktopOS.switchEnvironment('jarvis')">Warp to Jarvis Ambient Core</button>
+    </div>
+
+    <!-- Control Center Flyout -->
+    <div id="control-center">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong style="font-size:13px;">Control Center</strong>
+        <button class="de-btn" style="padding:4px 8px; font-size:11px;" onclick="window.DesktopOS.switchEnvironment('jarvis')">Jarvis Core</button>
+      </div>
+      <div style="font-size:11px; color:var(--de-muted); margin-bottom:6px; font-weight:600;">QUICK THEME SWITCHER</div>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <button class="sidebar-btn" data-quick-theme="cupertino-dark"> Apple Cupertino Dark</button>
+        <button class="sidebar-btn" data-quick-theme="cupertino-light"> Apple Cupertino Light</button>
+        <button class="sidebar-btn" data-quick-theme="zen">🐧 Pop!_OS / Ubuntu Slate</button>
+        <button class="sidebar-btn" data-quick-theme="nordic">❄️ Nordic Arctic Frost</button>
+        <button class="sidebar-btn" data-quick-theme="cyber">◈ Jarvis Cyber HUD</button>
+      </div>
+    </div>
+
+    <!-- Spotlight Modal -->
+    <div id="spotlight-modal">
+      <input id="spotlight-input" type="text" placeholder="Spotlight Search — Apps, Themes, or System Actions..." />
+      <div class="spotlight-results" id="spotlight-results"></div>
+    </div>
+
+    <!-- Workspace Desktop Stage (Windows + Desktop Shortcuts) -->
+    <main id="desktop-stage">
+      <div class="desktop-shortcuts">
+        <div class="shortcut-tile" data-app="terminal">
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#1E2028"/><path d="M13 17L21 24L13 31" stroke="#30D158" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="23" y1="31" x2="35" y2="31" stroke="#F5F5F7" stroke-width="3" stroke-linecap="round"/></svg>
+          <span>Terminal</span>
+        </div>
+        <div class="shortcut-tile" data-app="software">
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0A84FF"/><path d="M24 12L35 18V30L24 36L13 30V18L24 12Z" stroke="#FFF" stroke-width="2.6" stroke-linejoin="round"/><path d="M24 24L35 18M24 24V36M24 24L13 18" stroke="#FFF" stroke-width="2.2"/></svg>
+          <span>Software Store</span>
+        </div>
+        <div class="shortcut-tile" data-app="themes">
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#5E5CE6"/><circle cx="24" cy="24" r="11" stroke="#FFF" stroke-width="2.6"/><circle cx="24" cy="24" r="4" fill="#FFF"/></svg>
+          <span>Themes</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Frosted Glass macOS Dock -->
+    <div id="mac-dock-wrap">
+      <div id="mac-dock">
+        <div class="dock-item" data-app="finder">
+          <span class="dock-tooltip">Finder</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#1E90FF"/><path d="M24 4V44" stroke="#E2E8F0" stroke-width="2"/><circle cx="15" cy="19" r="2.2" fill="#0F172A"/><circle cx="33" cy="19" r="2.2" fill="#0F172A"/><path d="M16 30C18.5 33 29.5 33 32 30" stroke="#0F172A" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dock-item" data-app="terminal">
+          <span class="dock-tooltip">Terminal (Install Software)</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#18181B"/><path d="M14 17L22 24L14 31" stroke="#30D158" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="24" y1="31" x2="35" y2="31" stroke="#FFF" stroke-width="3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dock-item" data-app="software">
+          <span class="dock-tooltip">Software Center (APT / Flatpak)</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0A84FF"/><path d="M24 13L34 33H14L24 13Z" stroke="#FFF" stroke-width="2.8" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dock-item" data-app="browser">
+          <span class="dock-tooltip">Browser / Distro Docs</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#007AFF"/><circle cx="24" cy="24" r="13" stroke="#FFF" stroke-width="2.5"/><path d="M19 29L22 22L29 19L26 26L19 29Z" fill="#FF453A"/></svg>
+        </div>
+        <div class="dock-item" data-app="themes">
+          <span class="dock-tooltip">Themes (Apple / Zen / Nordic)</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#5E5CE6"/><circle cx="19" cy="21" r="6" fill="#FF453A" fill-opacity="0.85"/><circle cx="29" cy="21" r="6" fill="#30D158" fill-opacity="0.85"/><circle cx="24" cy="29" r="6" fill="#64D2FF" fill-opacity="0.85"/></svg>
+        </div>
+        <div class="dock-item" data-app="monitor">
+          <span class="dock-tooltip">System Monitor</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#2C2C2E"/><path d="M10 27H17L21 15L27 33L31 23H38" stroke="#30D158" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dock-divider"></div>
+        <div class="dock-item" data-app="jarvis-core">
+          <span class="dock-tooltip">Jarvis Ambient Core (3D AI HUD)</span>
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#07090E"/><circle cx="24" cy="24" r="13" stroke="#00E5FF" stroke-width="2.5"/><circle cx="24" cy="24" r="6" fill="#00E5FF"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Offline Scripts -->
+  <script src="graph-data.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/apps.js"></script>
+  <script src="js/desktop.js"></script>
+
+  <script>
+    const isMuted = window.location.search.includes('mute=1');
+
+    const canvas = document.getElementById('galaxy-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let stars = Array.from({ length: 180 }, () => ({
+      x: (Math.random() - 0.5) * width * 1.5,
+      y: (Math.random() - 0.5) * height * 1.5,
+      z: Math.random() * 800 + 100,
+      size: Math.random() * 1.5 + 0.5
+    }));
+
+    let nodes = GRAPH.nodes.map((n) => ({
+      ...n,
+      x: (Math.random() - 0.5) * (width * 0.5),
+      y: (Math.random() - 0.5) * (height * 0.5),
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      glow: 0
+    }));
+
+    function render() {
+      ctx.fillStyle = '#07090e';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(s => {
+        s.z -= 0.15;
+        if (s.z <= 0) s.z = 800;
+        const scale = 400 / s.z;
+        const sx = width / 2 + s.x * scale;
+        const sy = height / 2 + s.y * scale;
+        if (sx >= 0 && sx < width && sy >= 0 && sy < height) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, s.size * scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (Math.abs(n.x) > width * 0.35) n.vx *= -1;
+        if (Math.abs(n.y) > height * 0.35) n.vy *= -1;
+      });
+
+      ctx.lineWidth = 1;
+      GRAPH.links.forEach(l => {
+        const src = nodes.find(n => n.id === l.source);
+        const tgt = nodes.find(n => n.id === l.target);
+        if (src && tgt) {
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
+          ctx.beginPath();
+          ctx.moveTo(width / 2 + src.x, height / 2 + src.y);
+          ctx.lineTo(width / 2 + tgt.x, height / 2 + tgt.y);
+          ctx.stroke();
+        }
+      });
+
+      nodes.forEach(n => {
+        const sx = width / 2 + n.x;
+        const sy = height / 2 + n.y;
+        const gradient = ctx.createRadialGradient(sx, sy, 2, sx, sy, 18 + n.glow);
+        gradient.addColorStop(0, '#38bdf8');
+        gradient.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 18 + n.glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#f1f5f9';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px sans-serif';
+        ctx.fillText(n.label, sx + 9, sy + 4);
+      });
+
+      requestAnimationFrame(render);
+    }
+    render();
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left - width / 2;
+      const clickY = e.clientY - rect.top - height / 2;
+
+      const hit = nodes.find(n => Math.hypot(n.x - clickX, n.y - clickY) < 22);
+      if (hit) {
+        openPanel(hit.label, hit.excerpt);
+        hit.glow = 15;
+        setTimeout(() => hit.glow = 0, 1000);
+      }
+    });
+
+    function openPanel(title, excerpt) {
+      document.getElementById('panel-title').innerText = title;
+      document.getElementById('panel-excerpt').innerText = excerpt;
+      document.getElementById('side-panel').classList.add('open');
+    }
+
+    function closePanel() {
+      document.getElementById('side-panel').classList.remove('open');
+    }
+
+    function showBadge(brainText, voiceText) {
+      const badge = document.getElementById('status-badge');
+      if (brainText) document.getElementById('badge-brain').innerText = brainText;
+      if (voiceText) document.getElementById('badge-voice').innerText = voiceText;
+      badge.classList.add('visible');
+      setTimeout(() => badge.classList.remove('visible'), 5000);
+    }
+
+    function speakText(text) {
+      if (isMuted) return;
+      fetch('/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("TTS endpoint error");
+        return res.blob();
+      })
+      .then(blob => {
+        const audioUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+      })
+      .catch(() => {
+        if ('speechSynthesis' in window) {
+          const utt = new SpeechSynthesisUtterance(text);
+          window.speechSynthesis.speak(utt);
+        }
+      });
+    }
+
+    function applyZenModeUI(isZen) {
+      const modeBtn = document.getElementById('mode-btn');
+      if (isZen) {
+        window.DesktopOS.applyEnvironmentUI('desktop');
+      } else if (modeBtn) {
+        modeBtn.innerText = "🖥️ SWITCH TO DESKTOP (APPLE / THEMES)";
+        showBadge("MODE: JARVIS (Ambient HUD)", "BRAIN: Bonsai 27B (GPU VRAM)");
+      }
+    }
+
+    async function submitQuery() {
+      const input = document.getElementById('user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = '';
+      const speechBox = document.getElementById('agent-speech');
+      const latencyStat = document.getElementById('latency-stat');
+      speechBox.innerText = 'Consulting local core...';
+
+      const lower = text.toLowerCase();
+      if (lower.includes('open desktop') || lower.includes('switch to desktop') || lower.includes('switch to zen') || lower.includes('go zen') || lower === 'zen mode' || lower.includes('apple theme')) {
+        if (lower.includes('apple') || lower.includes('cupertino')) {
+          await window.JarvisThemes.selectTheme('cupertino-dark');
+        }
+        await window.DesktopOS.switchEnvironment('desktop');
+        speechBox.innerText = "Desktop Environment engaged, sir.";
+        speakText("Switching to the Desktop Environment now, sir.");
+        return;
+      }
+
+      if (lower.includes('switch to claude')) {
+        const res = await fetch('/brain/switch', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ brain: 'claude' }) });
+        const data = await res.json();
+        speechBox.innerText = data.message;
+        showBadge("BRAIN: claude (claude-3-7-sonnet)", null);
+        speakText(data.message);
+        return;
+      } else if (lower.includes('switch to local') || lower.includes('go local')) {
+        const res = await fetch('/brain/switch', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ brain: 'local' }) });
+        const data = await res.json();
+        speechBox.innerText = data.message;
+        showBadge("BRAIN: local (Bonsai 27B)", null);
+        speakText(data.message);
+        return;
+      }
+
+      if (/^(remember that|note to self|remember|log this)/i.test(text)) {
+        const res = await fetch('/remember', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phrase: text }) });
+        const data = await res.json();
+        if (data.success) {
+          speechBox.innerText = `Recorded: "${data.title}" to memory galaxy.`;
+          speakText("Recorded to your memory galaxy, sir.");
+          nodes.push({ id: data.note_id, label: data.title, group: 'captures', excerpt: text, x: 0, y: 0, vx: 0.2, vy: 0.2, glow: 20 });
+          document.getElementById('indexed-count').innerText = `${nodes.length} NODES INDEXED`;
+        }
+        return;
+      }
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: text })
+        });
+        const data = await res.json();
+        speechBox.innerText = data.answer || "No response received.";
+        latencyStat.innerText = `LATENCY: ${data.elapsed_seconds || 0}s`;
+        document.getElementById('brain-tag').innerText = `BRAIN: ${(data.brain || 'local').toUpperCase()}`;
+
+        if (data.nodes && data.nodes.length > 0) {
+          document.getElementById('source-tag').innerText = `SOURCES: ${data.nodes.length} NODES RECALLED`;
+          data.nodes.forEach(idx => {
+            const node = nodes.find(n => n.id === idx);
+            if (node) node.glow = 18;
+          });
+        }
+        speakText(data.answer);
+      } catch (e) {
+        speechBox.innerText = "Error transmitting to Jarvis daemon: " + e.message;
+      }
+    }
+
+    document.getElementById('send-btn').addEventListener('click', submitQuery);
+    document.getElementById('user-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitQuery();
+    });
+
+    setTimeout(() => {
+      showBadge("BRAIN: local (Bonsai 27B)", "VOICE: local (Kokoro-82M)");
+    }, 600);
+  </script>
+</body>
+</html>

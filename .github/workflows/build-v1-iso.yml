@@ -1,0 +1,94 @@
+name: Build & Publish Jarvis OS v1.0 Hybrid ISO
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: "Debian ISO build engine"
+        required: true
+        default: "debootstrap"
+        type: choice
+        options:
+          - debootstrap
+          - live-build
+      release_tag:
+        description: "Release tag (for manual dispatch)"
+        required: false
+        default: "v1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Maximize Free Runner Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/local/share/boost
+          df -h
+
+      - name: Checkout Jarvis OS
+        uses: actions/checkout@v4
+
+      - name: Build Privileged Debian Builder & Compile ISO
+        env:
+          BUILD_ENGINE: ${{ github.event.inputs.engine || 'debootstrap' }}
+        run: |
+          docker build -t jarvis-os-builder -f iso-builder/Dockerfile.builder iso-builder
+          if [ "$BUILD_ENGINE" = "live-build" ]; then
+            TARGET_SCRIPT="/workspace/iso-builder/build-debian-iso.sh"
+          else
+            TARGET_SCRIPT="/workspace/iso-builder/build-debootstrap-iso.sh"
+          fi
+          docker run --rm --privileged \
+            -v "${GITHUB_WORKSPACE}:/workspace" \
+            -w /workspace/iso-builder \
+            jarvis-os-builder \
+            /bin/bash "$TARGET_SCRIPT"
+
+      - name: Prepare Checksums & Split Assets (If > 1.95 GiB)
+        run: |
+          cd iso-builder/out
+          ISO_FILE=$(ls -1 *.iso | head -n 1)
+          echo "ISO_NAME=${ISO_FILE}" >> $GITHUB_ENV
+          sha256sum "${ISO_FILE}" > SHA256SUMS.txt
+          SIZE_BYTES=$(stat -c%s "${ISO_FILE}")
+          echo "Built ${ISO_FILE} (${SIZE_BYTES} bytes)"
+          if [ "${SIZE_BYTES}" -gt 2040000000 ]; then
+            echo "[INFO] ISO exceeds 1.9 GiB GitHub single-asset limit; creating fallback split parts..."
+            mkdir -p release-parts
+            split -b 1900M -d "${ISO_FILE}" "release-parts/${ISO_FILE}.part."
+            cp SHA256SUMS.txt release-parts/
+          else
+            mkdir -p release-parts
+            cp "${ISO_FILE}" SHA256SUMS.txt release-parts/
+          fi
+
+      - name: Upload Unsplit ISO & Checksums to Cloudflare R2 (If Secrets Configured)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET || 'jarvis-os-releases' }}
+          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          TAG: ${{ github.ref_name || github.event.inputs.release_tag || 'v1.0.0' }}
+        run: |
+          if [ -n "${AWS_ACCESS_KEY_ID}" ] && [ -n "${AWS_SECRET_ACCESS_KEY}" ] && [ -n "${R2_ENDPOINT_URL}" ]; then
+            pip install --quiet awscli
+            aws s3 cp "iso-builder/out/${ISO_NAME}" "s3://${R2_BUCKET}/${TAG}/${ISO_NAME}" --endpoint-url "${R2_ENDPOINT_URL}"
+            aws s3 cp "iso-builder/out/SHA256SUMS.txt" "s3://${R2_BUCKET}/${TAG}/SHA256SUMS.txt" --endpoint-url "${R2_ENDPOINT_URL}"
+          else
+            echo "[INFO] Cloudflare R2 secrets not set yet; skipping R2 CDN upload and publishing to GitHub Releases."
+          fi
+
+      - name: Publish Checksums / Split Parts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name || github.event.inputs.release_tag || 'v1.0.0' }}
+          name: "Jarvis OS ${{ github.ref_name || github.event.inputs.release_tag || 'v1.0.0' }}"
+          generate_release_notes: true
+          files: |
+            iso-builder/out/release-parts/*

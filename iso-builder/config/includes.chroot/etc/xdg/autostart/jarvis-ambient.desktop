@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Jarvis Ambient Daemon
+Comment=Background Ambient AI Assistant
+Exec=/usr/bin/python3 /opt/jarvis-core/daemon.py
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
+X-KDE-autostart-after=panel

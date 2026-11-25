@@ -1,0 +1,76 @@
+{
+  "system": {
+    "host": "127.0.0.1",
+    "port": 4700,
+    "boot_brain": "local",
+    "debug": false
+  },
+  "brains": {
+    "local": {
+      "type": "openai_compatible",
+      "base_url": "http://127.0.0.1:11434/v1",
+      "model": "bonsai27b",
+      "model_path": "./Bonsai-27B-GGUF/Bonsai-27B-Q1_0.gguf",
+      "mmproj_path": "./Bonsai-27B-GGUF/mmproj-Bonsai-27B-BF16.gguf",
+      "api_key": "ollama",
+      "extra_body": {
+        "reasoning_effort": "low"
+      },
+      "max_tokens": 1500,
+      "temperature": 0.7
+    },
+    "claude": {
+      "type": "anthropic",
+      "base_url": "https://api.anthropic.com/v1",
+      "model": "claude-3-7-sonnet",
+      "api_key": "PUT-YOUR-KEY-HERE",
+      "max_tokens": 1024
+    },
+    "gemini": {
+      "type": "gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "model": "gemini-2.5-flash",
+      "api_key": "PUT-YOUR-KEY-HERE",
+      "max_tokens": 1024
+    }
+  },
+  "voice": {
+    "engine": "kokoro",
+    "url": "http://127.0.0.1:8880/v1/audio/speech",
+    "model_id": "kokoro-v1.0",
+    "profile": "am_adam",
+    "response_format": "wav",
+    "sample_rate": 24000,
+    "fallback_to_browser": true,
+    "chunk_char_limit": 170
+  },
+  "hearing": {
+    "wake_word": "jarvis",
+    "wake_aliases": ["hey jarvis", "ok jarvis"],
+    "model": "faster-whisper-large-v3-turbo",
+    "wake_model": "whisper-small",
+    "silence_ms": 700,
+    "finish_ms": 900,
+    "sample_rate": 16000
+  },
+  "memory": {
+    "notes_dir": "./notes",
+    "captures_dir": "./notes/captures",
+    "index_path": "./viewer/graph-data.js",
+    "sqlite_db": "./memory/jarvis_memory.db",
+    "top_k_retrieval": 6
+  },
+  "inference": {
+    "engine": "hybrid_llama_cpp",
+    "target_model": "bonsai27b",
+    "model_path": "./Bonsai-27B-GGUF/Bonsai-27B-Q1_0.gguf",
+    "mmproj_path": "./Bonsai-27B-GGUF/mmproj-Bonsai-27B-BF16.gguf",
+    "draft_model": "deepseek-r1:1.5b",
+    "quantization": "Q1_0",
+    "context_length": 8192,
+    "vram_headroom_mb": 2048,
+    "gpu_layers_auto": true,
+    "speculative_decoding": true,
+    "gbnf_grammar_enforced": true
+  }
+}

@@ -1,0 +1,41 @@
+# ==============================================================================
+# Jarvis OS: Debian Base & Low-Latency Audio Package List
+# ==============================================================================
+
+# Kernel & Base OS
+linux-image-amd64
+linux-headers-amd64
+systemd
+systemd-sysv
+dbus-user-session
+sudo
+curl
+wget
+git
+btrfs-progs
+dosfstools
+e2fsprogs
+ntfs-3g
+exfat-fuse
+parted
+network-manager
+network-manager-gnome
+grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed
+locales
+tzdata
+ca-certificates
+firmware-linux
+firmware-linux-nonfree
+firmware-misc-nonfree
+
+# PipeWire Low-Latency Audio Pipeline
+pipewire
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
+wireplumber
+libspa-0.2-bluetooth
+rtkit
+alsa-utils

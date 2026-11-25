@@ -1,0 +1,26 @@
+#!/bin/sh
+# ==============================================================================
+# Jarvis OS: Debian live-build auto/config
+# Configures live-build parameters for building a bootable hybrid Debian ISO.
+# ==============================================================================
+
+set -e
+
+lb config noauto \
+    --mode debian \
+    --distribution bookworm \
+    --architectures amd64 \
+    --archive-areas "main contrib non-free non-free-firmware" \
+    --binary-images iso-hybrid \
+    --bootloader grub-efi \
+    --iso-application "Jarvis OS (Debian Edition)" \
+    --iso-publisher "Jarvis AI Engineering" \
+    --iso-volume "JARVIS_OS_DEBIAN" \
+    --memtest none \
+    --win32-loader false \
+    --apt-recommends true \
+    --apt-indices false \
+    --security true \
+    --updates true \
+    --backports true \
+    "${@}"

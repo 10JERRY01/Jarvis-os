@@ -1,0 +1,63 @@
+# ==============================================================================
+# Jarvis OS: Desktop Environment, Browsers & GUI Tools (KDE Plasma 6 / Wayland)
+# ==============================================================================
+
+# Core Desktop & Display Manager
+kde-plasma-desktop
+plasma-workspace-wayland
+sddm
+sddm-theme-breeze
+konsole
+dolphin
+ark
+kwrite
+plasma-nm
+plasma-pa
+power-profiles-daemon
+xdg-desktop-portal-kde
+xdg-user-dirs
+
+# Web Browsers
+firefox-esr
+chromium
+
+# Must-Have GUI Tools, App Store & Media
+vlc
+spectacle
+gparted
+kcalc
+kolourpaint
+synaptic
+plasma-discover
+plasma-discover-backend-flatpak
+plasma-discover-backend-fwupd
+nala
+aptitude
+
+# Fonts & Clean Typography
+fonts-firacode
+fonts-jetbrains-mono
+fonts-inter
+fonts-noto
+fonts-noto-color-emoji
+fonts-font-awesome
+
+# Minimalist & Apple-Inspired Icons, Global Menu & Visual Themes
+papirus-icon-theme
+breeze-icon-theme
+breeze-gtk-theme
+qt6-style-kvantum
+appmenu-gtk3-module
+appmenu-gtk2-module
+libdbusmenu-gtk3-4
+kdeplasma-addons
+kwin-addons
+
+# Qt / GTK Theming & Integration
+qt6-wayland
+qml-module-org-kde-kirigami2
+plasma-integration
+
+# Installer
+calamares
+calamares-settings-debian

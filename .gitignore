@@ -1,0 +1,48 @@
+# ==============================================================================
+# Jarvis OS (.gitignore) — Keeps Public Repository Lightweight & Secret-Free
+# ==============================================================================
+
+# Large Local LLM Weights (Exceeded GitHub 100 MB limit; fetch via setup_models.sh)
+*.gguf
+*.bin
+*.safetensors
+*.onnx
+
+# Built ISO Images & Live-Build Intermediate Caches
+*.iso
+*.iso.part.*
+*.squashfs
+*.img
+iso-builder/out/*.iso
+iso-builder/out/*.txt
+iso-builder/.build/
+iso-builder/cache/
+iso-builder/chroot/
+iso-builder/binary/
+iso-builder/local/
+
+# Runtime SQLite Databases, Logs & Generated Memory Captures
+*.db
+*.db-journal
+*.sqlite
+*.log
+notes/captures/*.md
+jarvis-core/state_mode.json
+iso-builder/config/includes.chroot/opt/jarvis-core/state_mode.json
+viewer/graph-data.js
+
+# Python & Environment Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Voice Caches & Local Temporary Files
+jarvis-core/voice/cache/
+iso-builder/config/includes.chroot/opt/jarvis-core/voice/cache/
+*.wav
+*.tmp
+.DS_Store
+Thumbs.db

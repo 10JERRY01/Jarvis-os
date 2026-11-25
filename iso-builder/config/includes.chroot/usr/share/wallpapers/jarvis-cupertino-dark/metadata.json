@@ -1,0 +1,12 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Jarvis OS Team"
+      }
+    ],
+    "Id": "jarvis-cupertino-dark",
+    "License": "GPLv3",
+    "Name": "Jarvis Cupertino Dark"
+  }
+}

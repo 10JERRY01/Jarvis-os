@@ -1,0 +1,106 @@
+# ==============================================================================
+# JARVIS OS: Core System Package Manifest (Arch Linux / CachyOS Base)
+# Target Architecture: x86_64-v3 / x86_64-v4
+# ==============================================================================
+
+# --- Base System & Optimized Kernel ---
+base
+base-devel
+linux-cachyos
+linux-cachyos-headers
+linux-firmware
+cachyos-settings
+cachyos-hooks
+btrfs-progs
+snapper
+efibootmgr
+grub
+networkmanager
+network-manager-applet
+sudo
+which
+curl
+wget
+git
+
+# --- Audio Pipeline (Low-Latency for Whisper & Kokoro TTS) ---
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+rtkit
+alsa-utils
+
+# --- GPU Acceleration & Compute (NVIDIA, AMD, Intel) ---
+nvidia-dkms
+nvidia-utils
+nvidia-settings
+opencl-nvidia
+cuda
+mesa
+vulkan-radeon
+vulkan-intel
+intel-media-driver
+vulkan-tools
+clinfo
+
+# --- Desktop Environment & Wayland Compositors ---
+plasma-meta
+plasma-wayland-session
+kde-applications-meta
+hyprland
+waybar
+wofi
+kitty
+alacritty
+dolphin
+ark
+qt6-wayland
+sddm
+sddm-kcm
+
+# --- Local AI, LLMs & Machine Learning Stacks ---
+ollama
+python
+python-pip
+python-virtualenv
+python-numpy
+uv
+docker
+docker-compose
+podman
+distrobox
+nvidia-container-toolkit
+
+# --- Gaming & Performance Stack ---
+steam
+gamemode
+mangohud
+gamescope
+wine-staging
+winetricks
+
+# --- Developer Utilities & Toolchains ---
+neovim
+rustup
+go
+nodejs
+npm
+clang
+cmake
+gdb
+ripgrep
+fd
+fzf
+tmux
+htop
+fastfetch
+unzip
+tar
+rsync
+openssh
+
+# --- Installer & Live Media ---
+calamares
+mkinitcpio-archiso

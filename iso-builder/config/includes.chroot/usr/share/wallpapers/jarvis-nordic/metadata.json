@@ -1,0 +1,12 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Jarvis OS Team"
+      }
+    ],
+    "Id": "jarvis-nordic",
+    "License": "GPLv3",
+    "Name": "Jarvis Nordic"
+  }
+}

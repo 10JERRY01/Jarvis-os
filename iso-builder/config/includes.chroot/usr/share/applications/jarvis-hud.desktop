@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Jarvis Knowledge Galaxy & HUD
+Comment=Offline-First Ambient AI Assistant & Knowledge Galaxy
+Exec=/usr/bin/python3 /opt/jarvis-core/tools/launch_hud.py
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Utility;Development;System;
+StartupNotify=true
+Actions=AirGapDrill;Preflight;
+
+[Desktop Action AirGapDrill]
+Name=Run Wi-Fi-Off Air-Gap Drill
+Exec=konsole -e /usr/bin/python3 /opt/jarvis-core/preflight/wifi_off_drill.py
+
+[Desktop Action Preflight]
+Name=Run Latency Preflight Audit
+Exec=konsole -e /usr/bin/python3 /opt/jarvis-core/preflight/preflight.py

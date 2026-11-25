@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Jarvis / Zen Mode Toggle
+Comment=Switch between Jarvis Ambient AI Mode and Minimalist Pop/Ubuntu Zen Mode
+Exec=python3 /opt/jarvis-core/tools/mode_switcher.py toggle
+Icon=preferences-system-windows
+Terminal=false
+Type=Application
+Categories=Utility;System;Settings;
+StartupNotify=true
+Actions=JarvisMode;ZenMode;
+
+[Desktop Action JarvisMode]
+Name=Switch to Jarvis Ambient AI Mode
+Exec=python3 /opt/jarvis-core/tools/mode_switcher.py jarvis
+Icon=computer
+
+[Desktop Action ZenMode]
+Name=Switch to Minimalist Zen Mode (Pop!_OS / Ubuntu)
+Exec=python3 /opt/jarvis-core/tools/mode_switcher.py zen
+Icon=user-desktop

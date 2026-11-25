@@ -1,0 +1,64 @@
+# ==============================================================================
+# Jarvis OS: AI / Machine Learning, Essential CLI Tools & Developer Stack
+# ==============================================================================
+
+# Compilers & Build Essentials
+build-essential
+clang
+cmake
+ninja-build
+gdb
+pkg-config
+
+# Essential Power-User CLI & Terminal Tools
+btop
+htop
+fastfetch
+neofetch
+tmux
+zsh
+bash-completion
+tree
+jq
+bat
+fd-find
+ripgrep
+fzf
+ncdu
+p7zip-full
+unzip
+zip
+rsync
+micro
+neovim
+nano
+
+# Network, Hardware & System Diagnostics
+curl
+wget
+net-tools
+iproute2
+dnsutils
+iperf3
+nmap
+traceroute
+pciutils
+usbutils
+inxi
+lsof
+
+# Python & AI Runtimes
+python3-full
+python3-pip
+python3-venv
+python3-numpy
+sqlite3
+
+# Container Runtimes (Docker / Podman / Distrobox)
+docker.io
+containerd
+docker-compose
+podman
+distrobox
+fuse-overlayfs
+uidmap

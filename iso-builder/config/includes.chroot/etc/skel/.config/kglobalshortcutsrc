@@ -1,0 +1,11 @@
+[services][jarvis-hud.desktop]
+_k_friendly_name=Jarvis Knowledge Galaxy & HUD
+_launch=Meta+Space,none,Launch Jarvis HUD
+
+[services][jarvis-vision.desktop]
+_k_friendly_name=Jarvis Screen Vision Analysis
+_launch=Meta+Shift+S,none,Analyze Screen Region with Jarvis
+
+[services][jarvis-mode-toggle.desktop]
+_k_friendly_name=Jarvis / Zen Mode Toggle
+_launch=Meta+Shift+M,none,Toggle Jarvis Ambient and Zen Minimalist Mode

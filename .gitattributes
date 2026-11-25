@@ -1,0 +1,18 @@
+# Enforce Unix LF line endings on all Linux shell scripts, hooks, and systemd configs
+* text=auto
+*.sh text eol=lf
+*.chroot text eol=lf
+*.service text eol=lf
+*.desktop text eol=lf
+*.colors text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+jarvis-pkg text eol=lf
+jarvis-theme text eol=lf
+
+# Binary assets
+*.png binary
+*.ico binary
+*.gguf binary
+*.iso binary

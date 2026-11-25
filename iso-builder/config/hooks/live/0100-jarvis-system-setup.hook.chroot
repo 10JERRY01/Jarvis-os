@@ -1,0 +1,35 @@
+#!/bin/sh
+# ==============================================================================
+# Jarvis OS: Post-Bootstrap Chroot Configuration Hook
+# Runs inside the chroot before squashfs compression.
+# ==============================================================================
+
+set -e
+
+echo "[JARVIS-HOOK] Setting up 32-bit Multiarch..."
+dpkg --add-architecture i386 || true
+
+echo "[JARVIS-HOOK] Enabling Core System Services..."
+systemctl enable jarvis-core.service || true
+systemctl enable NetworkManager.service || true
+systemctl enable sddm.service || true
+systemctl enable docker.service || true
+
+echo "[JARVIS-HOOK] Configuring Real-Time Audio Priorities..."
+mkdir -p /etc/security/limits.d
+cat << 'EOF' > /etc/security/limits.d/99-realtime.conf
+@audio - rtprio 95
+@audio - memlock unlimited
+@audio - nice -19
+EOF
+
+echo "[JARVIS-HOOK] Installing uv Python Package Manager..."
+if command -v curl >/dev/null 2>&1; then
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh || true
+fi
+
+echo "[JARVIS-HOOK] Setting executable permissions on CLI tools..."
+chmod +x /opt/jarvis-core/daemon.py /opt/jarvis-core/tools/*.py || true
+chmod +x /usr/local/bin/jarvis-pkg /usr/local/bin/jarvis-theme 2>/dev/null || true
+
+echo "[JARVIS-HOOK] Setup complete."

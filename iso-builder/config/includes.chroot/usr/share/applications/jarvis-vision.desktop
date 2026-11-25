@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Jarvis Vision Inspector
+Comment=Analyze current desktop or gaming frame using local Bonsai 27B vision model
+Exec=python3 /opt/jarvis-core/tools/screen_vision.py
+Icon=spectacle
+Terminal=false
+Categories=Utility;Graphics;
+Keywords=jarvis;vision;screen;ai;bonsai;
+StartupNotify=true

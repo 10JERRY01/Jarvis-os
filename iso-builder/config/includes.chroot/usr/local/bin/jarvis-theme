@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/python3 /opt/jarvis-core/tools/jarvis_cli.py theme "$@"
