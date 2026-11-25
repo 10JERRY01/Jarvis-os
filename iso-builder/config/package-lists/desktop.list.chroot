@@ -13,9 +13,11 @@ ark
 kwrite
 plasma-nm
 plasma-pa
+libnotify-bin
 power-profiles-daemon
 xdg-desktop-portal-kde
 xdg-user-dirs
+xdg-utils
 
 # Web Browsers
 firefox-esr
@@ -46,7 +48,7 @@ fonts-font-awesome
 papirus-icon-theme
 breeze-icon-theme
 breeze-gtk-theme
-qt6-style-kvantum
+qt5-style-kvantum
 appmenu-gtk3-module
 appmenu-gtk2-module
 libdbusmenu-gtk3-4

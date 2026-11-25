@@ -94,15 +94,25 @@ apt-get update
 # Core Live Boot & Hardware Packages
 apt-get install -y --no-install-recommends \
     live-boot \
+    live-boot-initramfs-tools \
     live-config \
+    initramfs-tools \
     systemd-sysv \
     dbus \
+    dbus-x11 \
     network-manager \
     sudo \
     curl \
     wget \
     pciutils \
     usbutils \
+    dosfstools \
+    e2fsprogs \
+    btrfs-progs \
+    parted \
+    grub-efi-amd64-bin \
+    grub-pc-bin \
+    efibootmgr \
     firmware-linux \
     firmware-linux-nonfree \
     firmware-misc-nonfree \
@@ -125,6 +135,7 @@ apt-get install -y --no-install-recommends \
     gamescope \
     lutris \
     wine \
+    wine32 \
     winetricks \
     flatpak
 
@@ -132,9 +143,15 @@ apt-get install -y --no-install-recommends \
 apt-get install -y --no-install-recommends \
     kde-plasma-desktop \
     plasma-workspace-wayland \
+    plasma-nm \
+    plasma-pa \
     sddm \
     konsole \
     dolphin \
+    ark \
+    libnotify-bin \
+    xdg-utils \
+    xdg-user-dirs \
     firefox-esr \
     chromium \
     vlc \
@@ -147,7 +164,7 @@ apt-get install -y --no-install-recommends \
     papirus-icon-theme \
     breeze-icon-theme \
     breeze-gtk-theme \
-    qt6-style-kvantum \
+    qt5-style-kvantum \
     appmenu-gtk3-module \
     libdbusmenu-gtk3-4 \
     kdeplasma-addons \
@@ -167,7 +184,6 @@ apt-get install -y --no-install-recommends \
     aptitude \
     btop \
     htop \
-    fastfetch \
     neofetch \
     ripgrep \
     fd-find \
@@ -182,6 +198,11 @@ apt-get install -y --no-install-recommends \
     zip \
     zsh \
     tmux
+
+# Optional Bookworm/Backports extras (best-effort without aborting build)
+for opt_pkg in steam-installer fastfetch vkbasalt; do
+    apt-get install -y --no-install-recommends "$opt_pkg" || true
+done
 
 # Kernel Installation: Liquorix low-latency or fallback to Debian standard
 apt-get install -y linux-image-liquorix-amd64 linux-headers-liquorix-amd64 || \
@@ -213,6 +234,8 @@ echo "[INFO] Staging Jarvis Core, Knowledge Galaxy HUD, Wallpapers & Calamares i
 mkdir -p "${CHROOT_DIR}/opt/jarvis-core" "${CHROOT_DIR}/opt/jarvis-hud" "${CHROOT_DIR}/etc/calamares"
 
 cp -r "${PROJECT_ROOT}/jarvis-core/"* "${CHROOT_DIR}/opt/jarvis-core/"
+find "${CHROOT_DIR}/opt/jarvis-core" -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+rm -f "${CHROOT_DIR}/opt/jarvis-core/state_mode.json" "${CHROOT_DIR}/opt/jarvis-core/memory/"*.db 2>/dev/null || true
 cp -r "${PROJECT_ROOT}/jarvis-hud/"* "${CHROOT_DIR}/opt/jarvis-hud/"
 cp -r "${PROJECT_ROOT}/calamares-config/"* "${CHROOT_DIR}/etc/calamares/"
 

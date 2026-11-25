@@ -107,10 +107,17 @@
     });
   }
 
-  // 3. Bind Download URLs (Cloudflare R2 Primary + GitHub Releases Fallback)
-  const primaryIsoUrl = cfg.cloudflareR2Configured && cfg.cloudflareR2IsoUrl
-    ? cfg.cloudflareR2IsoUrl
-    : (cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases");
+  // 3. Bind Download URLs (Internet Archive -> Cloudflare R2 -> GitHub Releases Fallback)
+  let primaryIsoUrl = cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases";
+  let mirrorText = "Mirror: GitHub Releases (Ready for Internet Archive direct .iso URL in website/config.js)";
+
+  if (cfg.internetArchiveIsoUrl) {
+    primaryIsoUrl = cfg.internetArchiveIsoUrl;
+    mirrorText = "Primary Mirror: Internet Archive Direct CDN (.iso)";
+  } else if (cfg.cloudflareR2IsoUrl) {
+    primaryIsoUrl = cfg.cloudflareR2IsoUrl;
+    mirrorText = "Primary Mirror: Cloudflare R2 Global CDN (.iso)";
+  }
 
   document.querySelectorAll("[data-iso-download]").forEach((el) => {
     el.setAttribute("href", primaryIsoUrl);
@@ -126,9 +133,7 @@
 
   const mirrorBadge = document.getElementById("mirror-badge-text");
   if (mirrorBadge) {
-    mirrorBadge.textContent = cfg.cloudflareR2Configured
-      ? "Mirror: Cloudflare R2 Global CDN (Direct .iso)"
-      : "Mirror: GitHub Releases (Ready for Cloudflare R2 CDN URL)";
+    mirrorBadge.textContent = mirrorText;
   }
 
   // 4. Bind Support Buttons at end of site (Buy Me a Coffee + Patreon)

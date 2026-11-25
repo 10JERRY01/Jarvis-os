@@ -1,5 +1,9 @@
 # Jarvis OS (v1.0 Genesis · Debian Edition)
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Debian Base](https://img.shields.io/badge/Base-Debian%2012%20Bookworm-A81D33.svg)](https://www.debian.org/)
+[![Project Website](https://img.shields.io/badge/Website-GitHub%20Pages-0A84FF.svg)](https://10JERRY01.github.io/Jarvis-os/)
+
 **Enterprise Debian Stability. Apple-Grade Minimalist Craft. Offline 27B Intelligence.**
 
 Jarvis OS is an open-source Debian 12 (*Bookworm*) Linux distribution engineered for AI developers, power users, and gamers. It pairs a **Liquorix 1000Hz low-latency kernel** and **KDE Plasma 6 (Wayland)** desktop with a dual-environment architecture—allowing instant switching between the **3D Jarvis Ambient Core** and an **Apple macOS / Minimalist Linux Desktop Environment** that frees 100% of GPU VRAM on demand.
@@ -15,50 +19,41 @@ Jarvis OS is an open-source Debian 12 (*Bookworm*) Linux distribution engineered
   - Pre-configured with `nala`, `apt`, `synaptic`, `plasma-discover` (Flatpak + APT Store), and `jarvis-pkg`.
   - AI Smart Shell (`?? <natural language>`) converts plain requests into safety-checked Linux commands.
 - **High-FPS Gaming & Developer Stack**:
-  - Steam (`i386` multiarch), Lutris, Proton compatibility, Feral GameMode, MangoHud, GOverlay, Gamescope, Wine, Docker, Podman, Distrobox, `btop`, `fastfetch`, `ripgrep`, `fzf`, and `uv`.
+  - Steam (`i386` multiarch), Lutris, Proton compatibility, Feral GameMode, MangoHud, GOverlay, Gamescope, Wine, Docker, Podman, Distrobox, `btop`, `neofetch`, `ripgrep`, `fzf`, and `uv`.
 - **The Wi-Fi-Off Law**: Zero outbound telemetry and 100% vendored local UI assets.
 
 ---
 
-## Repository Structure
+## Downloads & Website
 
-```text
-Jarvis-os/
-├── .github/workflows/      # Cloud ISO builder (R2 + Releases) & GitHub Pages CI
-├── calamares-config/       # Branded GUI installer + GPU hardware detection
-├── docs/                   # Developer & operations documentation
-├── iso-builder/            # Tri-Engine Debian ISO builder (live-build, debootstrap, repack)
-├── jarvis-core/            # Local AI daemon, Brain/Voice/Hearing, Terminal & Pkg APIs
-├── jarvis-hud/             # 100% offline Knowledge Galaxy & Apple-inspired Desktop Shell
-├── preflight/              # 12-point integrity, latency & air-gap verification harness
-├── website/                # Minimalist GitHub Pages website (Download Hub & Monetization)
-└── showcase.py             # End-to-end subsystem demonstration script
-```
+- **Official Website (GitHub Pages)**: [`https://10JERRY01.github.io/Jarvis-os/`](https://10JERRY01.github.io/Jarvis-os/)
+- **Releases & Checksums**: [`https://github.com/10JERRY01/Jarvis-os/releases`](https://github.com/10JERRY01/Jarvis-os/releases)
+- **ISO Hosting Mirror**: Designed for **Internet Archive (`archive.org`)** / **Cloudflare R2** direct `.iso` distribution configured in [`website/config.js`](website/config.js).
 
 ---
 
 ## Quick Start
 
-### 1. Build the Bootable Hybrid ISO
+### 1. Build the Bootable Hybrid ISO (`v1.0.0`)
 
-#### Option A: Windows / macOS / Linux via Docker Desktop
+#### Option A: Cloud Build via GitHub Actions (Recommended from Windows / macOS)
+Push a release tag (`git tag v1.0.0 && git push origin v1.0.0`) or run **Actions → Build & Publish Jarvis OS v1.0 Hybrid ISO** directly inside GitHub to build `jarvis-os-debootstrap-amd64.hybrid.iso` on Ubuntu Linux cloud runners.
+
+#### Option B: Local Windows / macOS / Linux via Docker Desktop
 ```powershell
-# Ensure Docker Desktop is running
+# Start Docker Desktop first, then execute:
 powershell -File iso-builder/docker-build-iso.ps1 -Engine debootstrap
-```
-
-#### Option B: Native Debian / Ubuntu Linux
-```bash
-cd iso-builder
-sudo ./build-debootstrap-iso.sh
 # Output: iso-builder/out/jarvis-os-debootstrap-amd64.hybrid.iso
 ```
 
-#### Option C: Cloud Build via GitHub Actions
-Push a version tag (e.g., `git tag v1.0.0 && git push origin v1.0.0`) or trigger `.github/workflows/build-v1-iso.yml` manually to compile the ISO in the cloud, upload to Cloudflare R2 (when secrets are set), and publish to GitHub Releases.
+#### Option C: Native Debian / Ubuntu Linux
+```bash
+cd iso-builder
+sudo ./build-debootstrap-iso.sh
+```
 
 ### 2. Hydrate Local Bonsai 27B Weights
-Large `.gguf` weights are excluded from Git. On Linux after installing/booting Jarvis OS, run:
+Multi-gigabyte `.gguf` weights are excluded from Git. On Linux after installing or booting Jarvis OS, run:
 ```bash
 bash jarvis-core/tools/setup_models.sh /path/to/Bonsai-27B-GGUF
 ```
@@ -69,6 +64,15 @@ python preflight/wifi_off_drill.py
 python preflight/preflight.py
 python showcase.py
 ```
+
+---
+
+## Support the Project
+
+If Jarvis OS powers your workstation or inspires your setup, please consider supporting ongoing open-source development:
+
+- **Buy Me a Coffee**: [`https://buymeacoffee.com/jerrymice45`](https://buymeacoffee.com/jerrymice45)
+- **Patreon**: [`https://www.patreon.com/c/Jerry42`](https://www.patreon.com/c/Jerry42)
 
 ---
 

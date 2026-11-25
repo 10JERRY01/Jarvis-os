@@ -13,7 +13,6 @@ pkg-config
 # Essential Power-User CLI & Terminal Tools
 btop
 htop
-fastfetch
 neofetch
 tmux
 zsh

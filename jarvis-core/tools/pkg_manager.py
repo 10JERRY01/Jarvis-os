@@ -34,7 +34,7 @@ SOFTWARE_CATALOG: List[Dict[str, Any]] = [
     {"id": "synaptic", "name": "Synaptic", "category": "System", "desc": "Classic GTK graphical APT package manager", "source": "apt"},
     {"id": "plasma-discover", "name": "KDE Discover Store", "category": "System", "desc": "Graphical App Store for Debian APT & Flatpak", "source": "apt"},
     {"id": "btop", "name": "btop++", "category": "Power Tools", "desc": "Modern resource monitor for CPU, GPU, disks & network", "source": "apt"},
-    {"id": "fastfetch", "name": "Fastfetch", "category": "Power Tools", "desc": "Ultra-fast system information telemetry tool", "source": "apt"},
+    {"id": "neofetch", "name": "Neofetch", "category": "Power Tools", "desc": "Classic system information & OS logo telemetry tool", "source": "apt"},
     {"id": "neovim", "name": "Neovim", "category": "Developer", "desc": "Hyperextensible Vim-based modern code editor", "source": "apt"},
     {"id": "docker.io", "name": "Docker Engine", "category": "Developer", "desc": "Container runtime and orchestration CLI", "source": "apt"},
     {"id": "podman", "name": "Podman + Distrobox", "category": "Developer", "desc": "Rootless containers & multi-distro terminal sandboxes", "source": "apt"},

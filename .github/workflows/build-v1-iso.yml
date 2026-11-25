@@ -92,3 +92,13 @@ jobs:
           generate_release_notes: true
           files: |
             iso-builder/out/release-parts/*
+
+      - name: Upload Single Unsplit ISO Artifact (For Internet Archive Upload)
+        uses: actions/upload-artifact@v4
+        with:
+          name: jarvis-os-v1.0-hybrid-iso
+          path: |
+            iso-builder/out/*.iso
+            iso-builder/out/SHA256SUMS.txt
+          retention-days: 14
+          if-no-files-found: error
