@@ -1,3 +1,4 @@
-# Authorized Digital Sellers (ads.txt) for Jarvis OS GitHub Pages
-# Uncomment and insert your EthicalAds / AdSense publisher details when ready:
+# Authorized Digital Sellers (ads.txt) for Jarvis OS Website
+# EthicalAds is cookie-free contextual advertising and works on github.io without ads.txt.
+# If you later attach a custom domain with Google AdSense, place ads.txt at your domain root:
 # google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

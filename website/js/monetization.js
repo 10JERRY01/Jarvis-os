@@ -16,10 +16,21 @@
     ? localStorage.getItem("jarvis_site_theme")
     : "cupertino-dark";
 
+  const isLightTheme = (themeId) => String(themeId || "").includes("light");
+
+  const syncAdTheme = (themeId) => {
+    const light = isLightTheme(themeId);
+    document.querySelectorAll("[data-ea-publisher]").forEach((el) => {
+      el.classList.toggle("light", light);
+      el.classList.toggle("dark", !light);
+    });
+  };
+
   const applySiteTheme = (themeId) => {
     document.documentElement.setAttribute("data-site-theme", themeId);
     localStorage.setItem("jarvis_site_theme", themeId);
     if (themeSelect) themeSelect.value = themeId;
+    syncAdTheme(themeId);
   };
   applySiteTheme(savedTheme);
 
@@ -154,51 +165,112 @@
   if (bmcBtn && cfg.support?.buyMeACoffeeUrl) bmcBtn.setAttribute("href", cfg.support.buyMeACoffeeUrl);
   if (patreonBtn && cfg.support?.patreonUrl) patreonBtn.setAttribute("href", cfg.support.patreonUrl);
 
-  // 5. Privacy Consent + EthicalAds / Carbon Ads Loader
+  // 5. Privacy-First Contextual Ads (EthicalAds Primary + Carbon Ads Fallback)
   const adContainer = document.getElementById("ad-slot-container");
   const cookieBanner = document.getElementById("cookie-banner");
   const acceptBtn = document.getElementById("cookie-accept");
   const declineBtn = document.getElementById("cookie-decline");
+  const prefStatusEl = document.getElementById("ad-pref-status");
+  const toggleOptOutBtn = document.getElementById("toggle-ad-optout-btn");
+
+  const setOptedOutNotice = () => {
+    if (!adContainer) return;
+    adContainer.textContent = "";
+    const msg = document.createElement("span");
+    msg.className = "ad-fallback";
+    msg.textContent = "Contextual ads are paused on this browser. ";
+    const link = document.createElement("a");
+    link.href = "privacy.html";
+    link.textContent = "Manage preference";
+    msg.appendChild(link);
+    adContainer.appendChild(msg);
+  };
 
   const loadDeveloperAds = () => {
     if (!adContainer || !cfg.ads) return;
-    const isLight = (document.documentElement.getAttribute("data-site-theme") || "").includes("light");
-    const themeMode = isLight ? "light" : "dark";
+    const themeId = document.documentElement.getAttribute("data-site-theme") || "cupertino-dark";
+    const themeMode = isLightTheme(themeId) ? "light" : "dark";
 
     if (cfg.ads.provider === "ethicalads" && cfg.ads.ethicalAdsPublisherId) {
-      adContainer.innerHTML = `<div class="${themeMode}" data-ea-publisher="${cfg.ads.ethicalAdsPublisherId}" data-ea-type="text"></div>`;
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
-      document.body.appendChild(s);
+      adContainer.textContent = "";
+      const slot = document.createElement("div");
+      slot.className = `flat ${themeMode}`;
+      slot.setAttribute("data-ea-publisher", cfg.ads.ethicalAdsPublisherId);
+      slot.setAttribute("data-ea-type", cfg.ads.ethicalAdsType || "text");
+      slot.setAttribute("data-ea-dark-selector", "html:not([data-site-theme='cupertino-light'])");
+      const keywords = adContainer.getAttribute("data-page-keywords") || cfg.ads.keywords;
+      if (keywords) slot.setAttribute("data-ea-keywords", keywords);
+      adContainer.appendChild(slot);
+
+      const existingScript = document.getElementById("ethicalads-js");
+      if (!existingScript) {
+        const s = document.createElement("script");
+        s.id = "ethicalads-js";
+        s.async = true;
+        s.src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
+        document.body.appendChild(s);
+      } else if (window.ethicalads && typeof window.ethicalads.load === "function") {
+        window.ethicalads.load();
+      }
     } else if (cfg.ads.provider === "carbon" && cfg.ads.carbonServe && cfg.ads.carbonPlacement) {
+      adContainer.textContent = "";
       const s = document.createElement("script");
       s.async = true;
       s.id = "_carbonads_js";
       s.src = `https://cdn.carbonads.com/carbon.js?serve=${encodeURIComponent(cfg.ads.carbonServe)}&placement=${encodeURIComponent(cfg.ads.carbonPlacement)}`;
-      adContainer.innerHTML = "";
       adContainer.appendChild(s);
     }
   };
 
-  const consent = localStorage.getItem("jarvis_ad_consent");
-  if (!consent && cookieBanner) {
+  const syncPrivacyUi = (consentState) => {
+    const declined = consentState === "declined";
+    if (prefStatusEl) {
+      prefStatusEl.innerHTML = declined
+        ? "Contextual Ads: <strong>Opted Out on this browser</strong>"
+        : "Contextual Ads: <strong>Enabled (Cookie-Free)</strong>";
+    }
+    if (toggleOptOutBtn) {
+      toggleOptOutBtn.textContent = declined ? "Re-enable Contextual Ads" : "Opt Out of Ads";
+    }
+  };
+
+  const initialConsent = localStorage.getItem("jarvis_ad_consent");
+  const requireClick = Boolean(cfg.ads && cfg.ads.requireConsentClick);
+  syncPrivacyUi(initialConsent);
+
+  if (!initialConsent && cookieBanner) {
     cookieBanner.classList.add("visible");
-  } else if (consent === "accepted") {
+  }
+
+  if (initialConsent === "declined") {
+    setOptedOutNotice();
+  } else if (!requireClick || initialConsent === "accepted") {
     loadDeveloperAds();
   }
 
   if (acceptBtn) {
     acceptBtn.addEventListener("click", () => {
       localStorage.setItem("jarvis_ad_consent", "accepted");
-      cookieBanner.classList.remove("visible");
+      if (cookieBanner) cookieBanner.classList.remove("visible");
+      syncPrivacyUi("accepted");
       loadDeveloperAds();
     });
   }
   if (declineBtn) {
     declineBtn.addEventListener("click", () => {
       localStorage.setItem("jarvis_ad_consent", "declined");
-      cookieBanner.classList.remove("visible");
+      if (cookieBanner) cookieBanner.classList.remove("visible");
+      syncPrivacyUi("declined");
+      setOptedOutNotice();
+    });
+  }
+  if (toggleOptOutBtn) {
+    toggleOptOutBtn.addEventListener("click", () => {
+      const next = localStorage.getItem("jarvis_ad_consent") === "declined" ? "accepted" : "declined";
+      localStorage.setItem("jarvis_ad_consent", next);
+      syncPrivacyUi(next);
+      if (next === "declined") setOptedOutNotice();
+      else loadDeveloperAds();
     });
   }
 

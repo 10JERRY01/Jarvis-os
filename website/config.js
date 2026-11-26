@@ -20,14 +20,20 @@ window.JARVIS_SITE_CONFIG = {
   sha256Url: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/SHA256SUMS.txt",
   githubSha256Url: "https://github.com/10JERRY01/Jarvis-os/releases/download/v1.0.0/SHA256SUMS.txt",
 
-  // 2. Privacy-First Developer Ad Network (EthicalAds or Carbon Ads)
+  // 2. Privacy-First Developer Ad Network (EthicalAds Primary + Optional Carbon Fallback)
   ads: {
     provider: "ethicalads",
-    // EthicalAds publisher ID (get at ethicalads.io/publishers/): e.g. "jarvis-os"
+    // Paste your EthicalAds Publisher ID from https://www.ethicalads.io/publishers/ (e.g. "jarvis-os")
     ethicalAdsPublisherId: "",
+    // Placement format: "text" (minimalist banner) or "image" (card with logo)
+    ethicalAdsType: "text",
+    // Contextual keywords for relevant Linux / Debian / AI developer ads
+    keywords: "linux|debian|open-source|local-ai|devtools",
     // Optional Carbon Ads keys (if switching provider to "carbon"):
     carbonServe: "",
     carbonPlacement: "",
+    // EthicalAds is cookie-free contextual by default; set true to hold ads until click
+    requireConsentClick: false,
   },
 
   // 3. Creator Support Links (Rendered cleanly at the end of the website)

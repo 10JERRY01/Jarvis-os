@@ -55,6 +55,21 @@
     </div>
   </header>
 
+  <!-- Above-the-Fold Developer Ad Slot (EthicalAds / Carbon Ads) -->
+  <section class="ad-section container" aria-label="Sponsor">
+    <div class="ad-slot-shell">
+      <div class="ad-slot-main">
+        <div class="ad-label">Sponsored · Privacy-First Developer Network</div>
+        <div id="ad-slot-container" class="ad-slot-content">
+          <span class="ad-fallback">
+            Funded by cookie-free developer sponsorships (<strong>EthicalAds</strong>) &amp; community supporters. Keep Jarvis OS free via <a href="#support">Patreon &amp; Buy Me a Coffee</a>.
+          </span>
+        </div>
+      </div>
+      <a class="btn btn-secondary btn-sm" href="privacy.html">Ad Transparency</a>
+    </div>
+  </section>
+
   <!-- Interactive Preview -->
   <section id="preview" class="preview-section container">
     <div class="preview-controls">
@@ -103,19 +118,6 @@
         <h3>Strict Local Boundaries</h3>
         <p>Verified air-gapped UI bundle with zero external CDN dependencies and localhost-only daemon sockets (<code>127.0.0.1:4700</code>).</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Minimalist Developer Ad Slot (EthicalAds / Carbon Ads) -->
-  <section class="ad-section container" aria-label="Sponsor">
-    <div class="ad-slot-shell">
-      <div>
-        <div class="ad-label">Sponsored · Privacy-First Developer Network (EthicalAds / Carbon)</div>
-        <div id="ad-slot-container" style="font-size:13.5px; color:var(--muted);">
-          Supporting Jarvis OS without intrusive tracking. Configure your <strong>EthicalAds</strong> or <strong>Carbon Ads</strong> ID in <code>website/config.js</code> to activate live contextual ads.
-        </div>
-      </div>
-      <a class="btn btn-secondary btn-sm" href="privacy.html">Ad Transparency</a>
     </div>
   </section>
 
@@ -203,13 +205,13 @@
     </div>
   </footer>
 
-  <!-- Cookie & Ad Consent Banner -->
-  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Privacy Consent">
-    <div><strong>Privacy &amp; Contextual Ads</strong></div>
-    <p style="color:var(--muted);">Jarvis OS itself is 100% air-gapped. This website uses privacy-respecting developer ads (EthicalAds / Carbon) to sustain ongoing development.</p>
+  <!-- Cookie-Free Ad & Privacy Notice -->
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Privacy &amp; Ad Notice">
+    <div><strong>Privacy-First Contextual Ads</strong></div>
+    <p style="color:var(--muted);">Jarvis OS itself is 100% air-gapped. This site uses cookie-free developer sponsorships (EthicalAds) without cross-site tracking.</p>
     <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button id="cookie-decline" class="btn btn-secondary btn-sm">Decline Ads</button>
-      <button id="cookie-accept" class="btn btn-primary btn-sm">Allow Contextual Ads</button>
+      <button id="cookie-decline" class="btn btn-secondary btn-sm">Opt Out</button>
+      <button id="cookie-accept" class="btn btn-primary btn-sm">Got It</button>
     </div>
   </div>
 
