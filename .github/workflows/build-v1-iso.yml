@@ -49,9 +49,11 @@ jobs:
             -w /workspace/iso-builder \
             jarvis-os-builder \
             /bin/bash "$TARGET_SCRIPT"
+          docker system prune -af || true
 
       - name: Prepare Checksums & Split Assets (If > 1.95 GiB)
         run: |
+          sudo chmod -R a+rwX iso-builder/out
           cd iso-builder/out
           ISO_FILE=$(ls -1 *.iso | head -n 1)
           echo "ISO_NAME=${ISO_FILE}" >> $GITHUB_ENV

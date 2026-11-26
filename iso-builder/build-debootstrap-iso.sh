@@ -330,9 +330,11 @@ EOF
 # 10. Generate Hybrid Bootable ISO
 echo "[INFO] Packaging hybrid ISO via grub-mkrescue & xorriso..."
 grub-mkrescue -o "${OUT_DIR}/${ISO_NAME}" "${ISO_DIR}" \
-    -- -volid "JARVIS_OS" \
-    -iso-level 3
+    -- -volid "JARVIS_OS" -compliance iso_9660_level=3 || \
+grub-mkrescue -o "${OUT_DIR}/${ISO_NAME}" "${ISO_DIR}" \
+    -- -volid "JARVIS_OS"
 
+chmod -R a+rwX "${OUT_DIR}" || true
 rm -rf "${BUILD_DIR}"
 
 echo "=========================================================="
