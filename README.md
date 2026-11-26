@@ -27,14 +27,18 @@ Jarvis OS is an open-source Debian 12 (*Bookworm*) Linux distribution engineered
 ## Downloads & Website
 
 - **Official Website (GitHub Pages)**: [`https://10JERRY01.github.io/Jarvis-os/`](https://10JERRY01.github.io/Jarvis-os/)
-- **Releases & Checksums**: [`https://github.com/10JERRY01/Jarvis-os/releases`](https://github.com/10JERRY01/Jarvis-os/releases)
-- **ISO Hosting Mirror**: Designed for **Internet Archive (`archive.org`)** / **Cloudflare R2** direct `.iso` distribution configured in [`website/config.js`](website/config.js).
+- **Direct Hybrid ISO Download (Internet Archive)**: [`jarvis-os-debootstrap-amd64.hybrid.iso`](https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso) (1.58 GiB / 1.70 GB)
+- **Internet Archive Item & Torrent**: [`https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid`](https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid)
+- **GitHub Releases v1.0.0 & Checksums**: [`https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0`](https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0)
+- **Verified SHA-256**: `c4ae2351dc1abecf1cba1ec078074500fbcb073c0f792e2788b4f6e659d0278a`
 
 ---
 
 ## Quick Start
 
-### 1. Build the Bootable Hybrid ISO (`v1.0.0`)
+### 1. Download or Build the Bootable Hybrid ISO (`v1.0.0`)
+
+Download the pre-built `v1.0.0` ISO straight from [Internet Archive](https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso) or [GitHub Releases](https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0), or build from source:
 
 #### Option A: Cloud Build via GitHub Actions (Recommended from Windows / macOS)
 Push a release tag (`git tag v1.0.0 && git push origin v1.0.0`) or run **Actions → Build & Publish Jarvis OS v1.0 Hybrid ISO** directly inside GitHub to build `jarvis-os-debootstrap-amd64.hybrid.iso` on Ubuntu Linux cloud runners.
@@ -72,7 +76,7 @@ python showcase.py
 If Jarvis OS powers your workstation or inspires your setup, please consider supporting ongoing open-source development:
 
 - **Buy Me a Coffee**: [`https://buymeacoffee.com/jerrymice45`](https://buymeacoffee.com/jerrymice45)
-- **Patreon**: [`https://www.patreon.com/c/Jerry42`](https://www.patreon.com/c/Jerry42)
+- **Patreon**: [`https://www.patreon.com/Jerry42`](https://www.patreon.com/Jerry42)
 
 ---
 

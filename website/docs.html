@@ -13,47 +13,64 @@
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="index.html#download">Download</a>
+        <a href="docs.html" class="active">Docs</a>
         <a href="privacy.html">Privacy</a>
       </div>
       <div class="nav-actions">
-        <button id="site-theme-toggle" class="icon-btn" title="Toggle Appearance">☀</button>
+        <select id="site-theme-select" class="theme-select" aria-label="Switch Theme">
+          <option value="cupertino-dark"> Cupertino Dark</option>
+          <option value="cupertino-light"> Cupertino Light</option>
+          <option value="zen">🐧 Zen Slate</option>
+          <option value="nordic">❄️ Nordic Arctic</option>
+          <option value="cyber">◈ Cyber HUD</option>
+        </select>
         <a class="btn btn-primary btn-sm" data-gh-repo href="https://github.com/10JERRY01/Jarvis-os" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </nav>
 
-  <main class="container section" style="max-width:820px;">
+  <main class="container section" style="max-width:840px;">
     <div class="pill-badge">INSTALL &amp; OPERATIONS GUIDE</div>
     <h1 style="font-size:2.3rem; letter-spacing:-0.025em; margin-bottom:18px;">Getting Started with Jarvis OS v1.0</h1>
 
     <div class="card" style="margin-bottom:18px;">
-      <h3>1. Flash the ISO to a USB Drive</h3>
-      <p>Download the hybrid ISO from the homepage (via Internet Archive / GitHub Releases) and verify its checksum before flashing with <strong>BalenaEtcher</strong>, <strong>Rufus</strong> (DD mode), or <strong>Ventoy</strong>.</p>
+      <h3>1. Download &amp; Flash the 1.58 GiB Hybrid ISO</h3>
+      <p>Download directly from <a data-iso-download href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso" style="color:var(--cyan); text-decoration:underline;">Internet Archive</a> (or <a data-gh-release href="https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0" style="color:var(--cyan); text-decoration:underline;">GitHub Releases</a>) and verify its SHA-256 checksum before flashing with <strong>BalenaEtcher</strong>, <strong>Rufus</strong> (DD mode), or <strong>Ventoy</strong>.</p>
       <pre class="sha-box">sha256sum -c SHA256SUMS.txt
+# Expected: c4ae2351dc1abecf1cba1ec078074500fbcb073c0f792e2788b4f6e659d0278a
+
 # On Linux:
 sudo dd if=jarvis-os-debootstrap-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress oflag=sync</pre>
     </div>
 
     <div class="card" style="margin-bottom:18px;">
       <h3>2. Install Local Bonsai 27B Weights</h3>
-      <p>To keep the bootable ISO lean (~2.4 GB), multi-gigabyte neural weights are hydrated after installation with a single script:</p>
+      <p>To keep the bootable ISO compact at <strong>1.58 GiB</strong>, multi-gigabyte neural weights are hydrated after installation with a single script:</p>
       <pre class="sha-box">bash /opt/jarvis-core/tools/setup_models.sh /path/to/Bonsai-27B-GGUF</pre>
     </div>
 
     <div class="card" style="margin-bottom:18px;">
-      <h3>3. Dual-Environment &amp; Terminal Commands</h3>
+      <h3>3. Dual-Environment, Apple Themes &amp; Software Commands</h3>
       <pre class="sha-box">jarvis mode desktop             # Switch to Apple Cupertino / Minimalist mode (frees VRAM)
 jarvis mode jarvis              # Resume Jarvis 3D Ambient Core
-jarvis theme cupertino-light    # Switch between Cupertino Dark/Light, Zen, Nordic, Cyber
-sudo nala install obs-studio    # Install Debian packages cleanly
+jarvis theme cupertino-dark     # Apple Cupertino Dark (left traffic lights)
+jarvis theme cupertino-light    # Apple Cupertino Light
+jarvis theme zen                # Minimalist Pop!_OS / Ubuntu Slate
+jarvis theme nordic             # Nordic Arctic Frost
+sudo nala install obs-studio    # Fast Debian package installation
 ?? find files larger than 100MB # AI natural-language bash helper</pre>
+    </div>
+
+    <div class="card">
+      <h3>4. Live Default Credentials &amp; Shortcuts</h3>
+      <p>Live session auto-logins as <code>jarvis</code> (password: <code>jarvis</code> with passwordless <code>sudo</code>). Launch the 3D HUD with <code>Super + Space</code>, toggle between Jarvis Core and Desktop with <code>Meta + Shift + M</code>, or inspect screen content with <code>Meta + Shift + S</code>.</p>
     </div>
   </main>
 
   <footer>
     <div class="container footer-inner">
-      <div>© 2026 Jarvis OS Project</div>
-      <div class="footer-links"><a href="index.html">Back to Home</a><a href="privacy.html">Privacy</a></div>
+      <div>© 2026 Jarvis OS Project · Licensed under GNU GPLv3</div>
+      <div class="footer-links"><a href="index.html">Back to Home</a><a href="privacy.html">Privacy</a><a href="ads.txt">ads.txt</a></div>
     </div>
   </footer>
   <script src="config.js"></script>

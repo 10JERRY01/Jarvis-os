@@ -10,32 +10,47 @@
   <nav class="navbar">
     <div class="container nav-inner">
       <a href="index.html" class="brand"><span class="brand-mark">J</span><span>Jarvis OS</span></a>
-      <div class="nav-links"><a href="index.html">Home</a><a href="docs.html">Docs</a></div>
-      <div class="nav-actions"><button id="site-theme-toggle" class="icon-btn">☀</button></div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#download">Download</a>
+        <a href="docs.html">Docs</a>
+        <a href="privacy.html" class="active">Privacy</a>
+      </div>
+      <div class="nav-actions">
+        <select id="site-theme-select" class="theme-select" aria-label="Switch Theme">
+          <option value="cupertino-dark"> Cupertino Dark</option>
+          <option value="cupertino-light"> Cupertino Light</option>
+          <option value="zen">🐧 Zen Slate</option>
+          <option value="nordic">❄️ Nordic Arctic</option>
+          <option value="cyber">◈ Cyber HUD</option>
+        </select>
+        <a class="btn btn-primary btn-sm" data-gh-repo href="https://github.com/10JERRY01/Jarvis-os" target="_blank" rel="noopener">GitHub</a>
+      </div>
     </div>
   </nav>
 
   <main class="container section" style="max-width:780px;">
-    <h1 style="font-size:2.1rem; margin-bottom:16px;">Privacy Policy &amp; Transparency</h1>
+    <div class="pill-badge">PRIVACY &amp; TRANSPARENCY</div>
+    <h1 style="font-size:2.1rem; letter-spacing:-0.025em; margin-bottom:18px;">Privacy Policy &amp; Ad Disclosure</h1>
     <div class="card" style="margin-bottom:16px;">
       <h3>Jarvis OS Operating System</h3>
       <p>The Jarvis OS Linux distribution itself enforces the <strong>Wi-Fi-Off Law</strong>: it contains zero telemetry, zero outbound ad tracking, and executes local AI inference strictly on your own hardware (<code>127.0.0.1</code>).</p>
     </div>
     <div class="card" style="margin-bottom:16px;">
       <h3>Public Project Website (GitHub Pages)</h3>
-      <p>This static documentation and download website uses local browser storage (<code>localStorage</code>) solely to remember your dark/light theme toggle and contextual ad consent preference.</p>
-      <p>When consented, privacy-first developer advertising (<strong>EthicalAds</strong> or <strong>Carbon Ads</strong>) may display contextual technical sponsorships to sustain project maintenance. ISO files are distributed via Internet Archive and GitHub Releases (with optional Cloudflare R2 CDN).</p>
+      <p>This static documentation and download website uses local browser storage (<code>localStorage</code>) solely to remember your theme preset and contextual ad consent preference.</p>
+      <p>When consented, privacy-first developer advertising (<strong>EthicalAds</strong> or <strong>Carbon Ads</strong>) may display contextual technical sponsorships to sustain project maintenance. ISO files are distributed via <strong>Internet Archive</strong> and <strong>GitHub Releases</strong>.</p>
     </div>
     <div class="card">
       <h3>Creator Support Links</h3>
-      <p>Optional donations via <strong>Buy Me a Coffee</strong> and <strong>Patreon</strong> open their respective third-party platforms under their own privacy policies.</p>
+      <p>Optional donations via <a href="https://buymeacoffee.com/jerrymice45" target="_blank" rel="noopener" style="color:var(--cyan); text-decoration:underline;">Buy Me a Coffee</a> and <a href="https://www.patreon.com/Jerry42" target="_blank" rel="noopener" style="color:var(--cyan); text-decoration:underline;">Patreon</a> open their respective platforms under their own privacy policies.</p>
     </div>
   </main>
 
   <footer>
     <div class="container footer-inner">
-      <div>© 2026 Jarvis OS Project</div>
-      <div class="footer-links"><a href="index.html">Home</a><a href="ads.txt">ads.txt</a></div>
+      <div>© 2026 Jarvis OS Project · Licensed under GNU GPLv3</div>
+      <div class="footer-links"><a href="index.html">Back to Home</a><a href="docs.html">Docs</a><a href="ads.txt">ads.txt</a></div>
     </div>
   </footer>
   <script src="config.js"></script>

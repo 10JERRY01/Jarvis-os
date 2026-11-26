@@ -1,24 +1,24 @@
 /**
  * ==============================================================================
  * Jarvis OS Website Configuration (Single-File Customization)
- * Update your Internet Archive / Cloudflare R2 ISO URL and Ad IDs anytime here.
+ * Direct Internet Archive ISO Mirror, Checksums, Theme Sync, Ads & Support Links
  * ==============================================================================
  */
 window.JARVIS_SITE_CONFIG = {
   version: "v1.0.0",
   codename: "Genesis · Debian 12 Bookworm",
   isoFilename: "jarvis-os-debootstrap-amd64.hybrid.iso",
-  isoSizeLabel: "~2.4 GB (x86_64 · BIOS + UEFI Hybrid)",
+  isoSizeLabel: "1.58 GiB (1.70 GB · x86_64 UEFI + BIOS Hybrid)",
+  sha256Hash: "c4ae2351dc1abecf1cba1ec078074500fbcb073c0f792e2788b4f6e659d0278a",
 
-  // 1. Repository & Download Mirrors (Internet Archive / Cloudflare R2 / GitHub Releases)
+  // 1. Repository & Verified Download Mirrors (Internet Archive + GitHub Releases)
   githubRepoUrl: "https://github.com/10JERRY01/Jarvis-os",
-  githubReleasesUrl: "https://github.com/10JERRY01/Jarvis-os/releases/latest",
-  // Paste your Internet Archive direct .iso link once uploaded, e.g.:
-  // "https://archive.org/download/jarvis-os-v1.0/jarvis-os-debootstrap-amd64.hybrid.iso"
-  internetArchiveIsoUrl: "",
-  // Optional Cloudflare R2 direct link:
-  cloudflareR2IsoUrl: "",
-  sha256Url: "https://github.com/10JERRY01/Jarvis-os/releases/latest",
+  githubReleasesUrl: "https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0",
+  internetArchiveIsoUrl: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso",
+  internetArchiveDirUrl: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid",
+  internetArchiveTorrentUrl: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid_archive.torrent",
+  sha256Url: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/SHA256SUMS.txt",
+  githubSha256Url: "https://github.com/10JERRY01/Jarvis-os/releases/download/v1.0.0/SHA256SUMS.txt",
 
   // 2. Privacy-First Developer Ad Network (EthicalAds or Carbon Ads)
   ads: {
@@ -30,11 +30,11 @@ window.JARVIS_SITE_CONFIG = {
     carbonPlacement: "",
   },
 
-  // 3. Creator Support Links (Rendered at the end of the website)
+  // 3. Creator Support Links (Rendered cleanly at the end of the website)
   support: {
     buyMeACoffeeUrl: "https://buymeacoffee.com/jerrymice45",
     buyMeACoffeeHandle: "jerrymice45",
-    patreonUrl: "https://www.patreon.com/c/Jerry42",
+    patreonUrl: "https://www.patreon.com/Jerry42",
     patreonHandle: "Jerry42",
   },
 };

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Jarvis OS v1.0 — Minimalist Apple-inspired Debian Linux with Liquorix 1000Hz Gaming Kernel and Offline 27B AI Core." />
+  <meta name="description" content="Jarvis OS v1.0 — Minimalist Apple-inspired Debian 12 Linux with Liquorix 1000Hz Gaming Kernel and Offline 27B AI Core." />
   <title>Jarvis OS v1.0 — Minimalist Debian Linux + Offline 27B AI</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -24,7 +24,13 @@
         <a href="#support">Support</a>
       </div>
       <div class="nav-actions">
-        <button id="site-theme-toggle" class="icon-btn" title="Toggle Dark / Light Appearance">☀</button>
+        <select id="site-theme-select" class="theme-select" aria-label="Switch Theme">
+          <option value="cupertino-dark"> Cupertino Dark</option>
+          <option value="cupertino-light"> Cupertino Light</option>
+          <option value="zen">🐧 Zen Slate</option>
+          <option value="nordic">❄️ Nordic Arctic</option>
+          <option value="cyber">◈ Cyber HUD</option>
+        </select>
         <a class="btn btn-secondary btn-sm" data-gh-repo href="https://github.com/10JERRY01/Jarvis-os" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-primary btn-sm" href="#download">Get ISO</a>
       </div>
@@ -33,27 +39,30 @@
 
   <!-- Hero -->
   <header class="hero container">
-    <div class="pill-badge">v1.0.0 GENESIS · DEBIAN 12 BOOKWORM · LIQUORIX 1000HZ</div>
+    <div class="pill-badge">v1.0.0 GENESIS · DEBIAN 12 BOOKWORM · 1.58 GiB HYBRID ISO</div>
     <h1>Calm Minimalism.<br/>Offline 27B Intelligence.</h1>
     <p>
-      An open-source Debian GNU/Linux distribution fusing an Apple-inspired multi-theme KDE Plasma 6 desktop with an air-gapped 3D AI Core that frees 100% of GPU VRAM on demand.
+      An open-source Debian GNU/Linux workstation pairing an Apple Cupertino &amp; Nordic multi-theme KDE Plasma desktop with a private 3D AI Core that frees 100% of GPU VRAM on demand.
     </p>
     <div class="hero-cta">
-      <a class="btn btn-primary" data-iso-download href="#download">Download Jarvis OS v1.0 (.iso)</a>
+      <a class="btn btn-primary" data-iso-download href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso" target="_blank" rel="noopener">Download Jarvis OS v1.0 (.iso)</a>
       <a class="btn btn-secondary" data-gh-repo href="https://github.com/10JERRY01/Jarvis-os" target="_blank" rel="noopener">View Source on GitHub</a>
     </div>
     <div class="hero-meta">
       <span>✓ 100% Free &amp; GPLv3 Open Source</span>
-      <span>✓ Instant Ambient Core ↔ Apple Desktop Toggle</span>
-      <span>✓ x86_64 UEFI + BIOS Hybrid</span>
+      <span>✓ Instant Apple Desktop ↔ Jarvis Core Switch</span>
+      <span>✓ Internet Archive Direct Mirror + BitTorrent</span>
     </div>
   </header>
 
   <!-- Interactive Preview -->
   <section id="preview" class="preview-section container">
-    <div class="preview-toggle">
-      <button class="tab-btn active" data-preview-mode="cupertino"> Apple Cupertino Desktop</button>
-      <button class="tab-btn" data-preview-mode="ambient">◈ Jarvis Ambient Core (3D HUD)</button>
+    <div class="preview-controls">
+      <div class="preview-toggle">
+        <button class="tab-btn active" data-preview-mode="cupertino"> Apple Cupertino Desktop</button>
+        <button class="tab-btn" data-preview-mode="ambient">◈ Jarvis Ambient Core (3D HUD)</button>
+      </div>
+      <span style="font-size:12px; color:var(--muted);">Try the theme dropdown above to preview all 5 live OS palettes</span>
     </div>
     <div class="mockup-frame">
       <div id="mock-screen" class="mockup-screen cupertino">
@@ -65,19 +74,19 @@
   <!-- Feature Bento Grid -->
   <section id="features" class="section container">
     <div class="section-head">
-      <h2>Engineered as a Complete Daily Workstation</h2>
-      <p>Switch cleanly between calm productivity, high-FPS gaming, and private local AI without rebooting.</p>
+      <h2>Engineered as a Full-Fledged Daily Linux Distro</h2>
+      <p>Switch cleanly between distraction-free work, high-FPS gaming, and private local AI without rebooting.</p>
     </div>
     <div class="bento-grid">
       <div class="card span-2">
-        <span class="card-tag">Dual-Persona Desktop Architecture</span>
+        <span class="card-tag">Dual-Environment &amp; Multi-Theme Engine</span>
         <h3>Apple Cupertino, Zen Slate, Nordic &amp; Cyber HUD</h3>
-        <p>Press <code>Meta + Shift + M</code> to move seamlessly between a distraction-free macOS-inspired desktop (global menu bar, left traffic-light buttons, floating glass dock, 0 MB AI VRAM) and the 3D Jarvis Knowledge Galaxy.</p>
+        <p>Press <code>Meta + Shift + M</code> to glide between a serene macOS-inspired desktop (global top bar, left traffic lights, floating dock, 0 MB AI VRAM) and the 3D Jarvis Knowledge Galaxy.</p>
       </div>
       <div class="card">
         <span class="card-tag">Local AI Engine</span>
         <h3>Bonsai 27B + Vision</h3>
-        <p>Zero cloud API bills and zero telemetry. Includes Total Recall SQLite FTS5 memory, AST Code RAG, and Screen Vision.</p>
+        <p>Zero API bills and zero cloud telemetry. Includes Total Recall SQLite FTS5 notes, AST Code RAG, and Screen Vision.</p>
       </div>
       <div class="card">
         <span class="card-tag">Software &amp; Terminal</span>
@@ -87,7 +96,7 @@
       <div class="card">
         <span class="card-tag">Gaming Performance</span>
         <h3>Liquorix 1000Hz Kernel</h3>
-        <p>Out-of-the-box Steam 32/64-bit multiarch, Lutris, Wine, Proton compatibility, GameMode, Gamescope, and MangoHud.</p>
+        <p>Ships with Steam multiarch, Lutris, Wine, GameMode, Gamescope, GOverlay, and MangoHud alongside Firefox ESR &amp; Chromium.</p>
       </div>
       <div class="card">
         <span class="card-tag">The Wi-Fi-Off Law</span>
@@ -103,7 +112,7 @@
       <div>
         <div class="ad-label">Sponsored · Privacy-First Developer Network (EthicalAds / Carbon)</div>
         <div id="ad-slot-container" style="font-size:13.5px; color:var(--muted);">
-          Supporting Jarvis OS without intrusive tracking. Configure your <strong>EthicalAds</strong> or <strong>Carbon Ads</strong> key in <code>website/config.js</code> to activate live contextual ads here.
+          Supporting Jarvis OS without intrusive tracking. Configure your <strong>EthicalAds</strong> or <strong>Carbon Ads</strong> ID in <code>website/config.js</code> to activate live contextual ads.
         </div>
       </div>
       <a class="btn btn-secondary btn-sm" href="privacy.html">Ad Transparency</a>
@@ -115,18 +124,22 @@
     <div class="download-box">
       <div>
         <div class="card-tag" style="margin-bottom:8px;">Release v1.0.0 · Genesis</div>
-        <h2 style="font-size:28px; letter-spacing:-0.02em; margin-bottom:10px;">Download Jarvis OS ISO</h2>
+        <h2 style="font-size:28px; letter-spacing:-0.02em; margin-bottom:10px;">Download Jarvis OS v1.0</h2>
         <p style="color:var(--muted); font-size:14.5px; margin-bottom:20px;">
-          Bootable hybrid Debian 12 Bookworm live ISO featuring KDE Plasma 6 Wayland, Calamares installer, Firefox ESR, Steam/Lutris, and Jarvis Core.
+          Bootable hybrid Debian 12 Bookworm live ISO (<span id="iso-size-label">1.58 GiB</span>) featuring KDE Plasma Wayland, Calamares installer, Steam/Lutris, Firefox ESR, and Jarvis Core.
         </p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-primary" data-iso-download href="https://github.com/10JERRY01/Jarvis-os/releases" target="_blank" rel="noopener">Download v1.0 ISO (Archive / Releases)</a>
-          <a class="btn btn-secondary" data-gh-release href="https://github.com/10JERRY01/Jarvis-os/releases" target="_blank" rel="noopener">GitHub Releases Checksums</a>
+          <a class="btn btn-primary" data-iso-download href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid.iso" target="_blank" rel="noopener">Download Direct (.iso)</a>
+          <a class="btn btn-secondary" data-gh-release href="https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0" target="_blank" rel="noopener">GitHub Releases Mirror</a>
         </div>
-        <div id="mirror-badge-text" style="font-size:12px; color:var(--muted); margin-top:12px;"></div>
+        <div class="mirror-row">
+          <a class="mirror-link" data-ia-dir href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid" target="_blank" rel="noopener">Internet Archive Directory</a>
+          <a class="mirror-link" data-ia-torrent href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/jarvis-os-debootstrap-amd64.hybrid_archive.torrent" target="_blank" rel="noopener">BitTorrent (.torrent)</a>
+          <a class="mirror-link" id="sha-link" href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/SHA256SUMS.txt" target="_blank" rel="noopener">SHA256SUMS.txt</a>
+        </div>
       </div>
       <div>
-        <h4 style="font-size:14px; margin-bottom:8px;">Minimum Specs &amp; Verification</h4>
+        <h4 style="font-size:14px; margin-bottom:8px;">Minimum Specs &amp; SHA-256 Checksum</h4>
         <ul style="font-size:13px; color:var(--muted); list-style:none; display:flex; flex-direction:column; gap:6px;">
           <li>• <strong>CPU:</strong> 64-bit x86_64 Intel or AMD</li>
           <li>• <strong>RAM:</strong> 8 GB min (16 GB+ recommended)</li>
@@ -134,11 +147,11 @@
           <li>• <strong>Disk:</strong> 25 GB free space (NVMe recommended)</li>
         </ul>
         <div class="sha-box">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span>sha256sum -c SHA256SUMS.txt</span>
-            <button id="copy-verify-btn" class="btn btn-secondary btn-sm" style="padding:3px 10px;">Copy</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+            <strong>SHA-256 Verified</strong>
+            <button id="copy-verify-btn" class="btn btn-secondary btn-sm" style="padding:3px 10px;">Copy SHA-256</button>
           </div>
-          <div style="margin-top:6px;"><a id="sha-link" href="https://github.com/10JERRY01/Jarvis-os/releases" style="color:var(--cyan);">View Release Checksums →</a></div>
+          <div id="sha-hash-text" style="word-break:break-all; color:var(--cyan);">c4ae2351dc1abecf1cba1ec078074500fbcb073c0f792e2788b4f6e659d0278a</div>
         </div>
       </div>
     </div>
@@ -148,17 +161,15 @@
   <section id="support" class="support-section container">
     <div class="section-head" style="margin-bottom:16px;">
       <h2>Back Independent Linux &amp; Local AI</h2>
-      <p>Jarvis OS is free, open-source, and respects your privacy. If it saves you time or powers your rig, consider supporting development.</p>
+      <p>Jarvis OS is free, open-source, and respects your privacy. If it powers your workstation, consider supporting development.</p>
     </div>
-
-    <div id="support-config-note" style="display:none; text-align:center; margin-bottom:16px; padding:10px; border-radius:10px; border:1px solid var(--border-strong); background:var(--surface); font-size:13px; color:var(--cyan);"></div>
 
     <div class="support-grid">
       <div class="support-card">
         <div>
           <span class="card-tag" style="color:var(--coffee);">One-Time Tip</span>
           <h3 style="margin-top:6px;">☕ Buy Me a Coffee</h3>
-          <p style="margin-top:6px;">Keep the build servers humming and fuel late-night kernel tuning, icon refinements, and ISO releases.</p>
+          <p style="margin-top:6px;">Fuel overnight kernel builds, Cupertino UI refinements, and future Debian &amp; AI releases.</p>
         </div>
         <div>
           <a id="bmc-btn" class="btn btn-coffee" href="https://buymeacoffee.com/jerrymice45" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
@@ -169,10 +180,10 @@
         <div>
           <span class="card-tag" style="color:var(--patreon);">Monthly Membership</span>
           <h3 style="margin-top:6px;">🎨 Join on Patreon</h3>
-          <p style="margin-top:6px;">Get early access to v1.x test ISOs, custom Cupertino &amp; gaming theme packs, and direct priority feature votes.</p>
+          <p style="margin-top:6px;">Get early access to v1.x test ISOs, custom Apple &amp; gaming theme packs, and roadmap voting.</p>
         </div>
         <div>
-          <a id="patreon-btn" class="btn btn-patreon" href="https://www.patreon.com/c/Jerry42" target="_blank" rel="noopener">Become a Patron</a>
+          <a id="patreon-btn" class="btn btn-patreon" href="https://www.patreon.com/Jerry42" target="_blank" rel="noopener">Become a Patron</a>
         </div>
       </div>
     </div>
@@ -184,6 +195,7 @@
       <div>© 2026 Jarvis OS Project · Licensed under GNU GPLv3</div>
       <div class="footer-links">
         <a data-gh-repo href="https://github.com/10JERRY01/Jarvis-os" target="_blank" rel="noopener">GitHub Source</a>
+        <a data-ia-dir href="https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid" target="_blank" rel="noopener">Internet Archive</a>
         <a href="docs.html">Installation Docs</a>
         <a href="privacy.html">Privacy &amp; Cookies</a>
         <a href="ads.txt">ads.txt</a>
@@ -194,7 +206,7 @@
   <!-- Cookie & Ad Consent Banner -->
   <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Privacy Consent">
     <div><strong>Privacy &amp; Contextual Ads</strong></div>
-    <p style="color:var(--muted);">Jarvis OS itself is 100% air-gapped. This project website uses privacy-respecting developer ads (EthicalAds / Carbon) to fund ISO bandwidth on Cloudflare R2.</p>
+    <p style="color:var(--muted);">Jarvis OS itself is 100% air-gapped. This website uses privacy-respecting developer ads (EthicalAds / Carbon) to sustain ongoing development.</p>
     <div style="display:flex; gap:8px; justify-content:flex-end;">
       <button id="cookie-decline" class="btn btn-secondary btn-sm">Decline Ads</button>
       <button id="cookie-accept" class="btn btn-primary btn-sm">Allow Contextual Ads</button>

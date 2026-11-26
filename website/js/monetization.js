@@ -1,37 +1,43 @@
 /**
  * Jarvis OS Website Orchestrator:
- * - Binds Cloudflare R2 / GitHub Releases ISO links dynamically from config.js
- * - Handles Privacy/Consent + EthicalAds / Carbon Ads contextual loading
- * - Binds Buy Me a Coffee & Patreon support CTAs
- * - Controls Light/Dark UI toggle and Dual-Persona Interactive Mockup
+ * - Multi-Theme parity with Jarvis OS (Cupertino Dark/Light, Zen Slate, Nordic, Cyber)
+ * - Verified Internet Archive direct ISO, .torrent, SHA256SUMS.txt, and GitHub Releases binding
+ * - Interactive Terminal & Dual-Persona Workstation Preview
+ * - Privacy Consent + EthicalAds / Carbon Ads contextual loader
+ * - Buy Me a Coffee & Patreon footer binding
  */
 (function () {
   const cfg = window.JARVIS_SITE_CONFIG || {};
 
-  // 1. Theme Toggle (Dark <-> Apple Pearl Light)
-  const themeBtn = document.getElementById("site-theme-toggle");
-  const savedTheme = localStorage.getItem("jarvis_site_theme") || "dark";
-  if (savedTheme === "light") document.documentElement.setAttribute("data-site-theme", "light");
+  // 1. Unified Multi-Theme Selector (Synced across index, docs, privacy)
+  const themeSelect = document.getElementById("site-theme-select");
+  const validThemes = ["cupertino-dark", "cupertino-light", "zen", "nordic", "cyber"];
+  const savedTheme = validThemes.includes(localStorage.getItem("jarvis_site_theme"))
+    ? localStorage.getItem("jarvis_site_theme")
+    : "cupertino-dark";
 
-  if (themeBtn) {
-    themeBtn.textContent = savedTheme === "light" ? "☾" : "☀";
-    themeBtn.addEventListener("click", () => {
-      const isLight = document.documentElement.getAttribute("data-site-theme") === "light";
-      const next = isLight ? "dark" : "light";
-      if (next === "light") {
-        document.documentElement.setAttribute("data-site-theme", "light");
-      } else {
-        document.documentElement.removeAttribute("data-site-theme");
-      }
-      localStorage.setItem("jarvis_site_theme", next);
-      themeBtn.textContent = next === "light" ? "☾" : "☀";
-    });
+  const applySiteTheme = (themeId) => {
+    document.documentElement.setAttribute("data-site-theme", themeId);
+    localStorage.setItem("jarvis_site_theme", themeId);
+    if (themeSelect) themeSelect.value = themeId;
+  };
+  applySiteTheme(savedTheme);
+
+  if (themeSelect) {
+    themeSelect.addEventListener("change", () => applySiteTheme(themeSelect.value));
   }
 
-  // 2. Interactive Dual-Persona Preview Tabs
+  // 2. Interactive Dual-Persona & Live Terminal Preview
   const tabBtns = document.querySelectorAll("[data-preview-mode]");
   const mockScreen = document.getElementById("mock-screen");
   const mockContent = document.getElementById("mock-content");
+
+  const terminalDemos = {
+    nala: "jarvis@jarvis-os:~$ sudo nala install obs-studio gimp\n[Nala] Fetching packages from Debian Bookworm...\n[OK] Installed obs-studio, gimp cleanly.",
+    theme: "jarvis@jarvis-os:~$ jarvis theme cupertino-light\n[SUCCESS] Applied Apple Cupertino Light + 4K Mesh Wallpaper.",
+    neofetch: "jarvis@jarvis-os:~$ neofetch\nOS: Jarvis OS 1.0 (Debian 12 Bookworm) x86_64\nKernel: 6.11-liquorix-amd64 (1000Hz)\nDE: KDE Plasma Wayland | Theme: Cupertino Dark",
+    ai: "jarvis@jarvis-os:~$ ?? find files over 100MB in /var/log\n[Bonsai 27B] find /var/log -type f -size +100M  [SAFE]",
+  };
 
   const renderMockup = (mode) => {
     if (!mockScreen || !mockContent) return;
@@ -46,19 +52,19 @@
           <div class="mock-win">
             <div style="font-size:11px; color:#38bdf8; font-weight:700; margin-bottom:8px;">BONSAI 27B LOCAL INFERENCE</div>
             <div class="mock-code">
-              > "Jarvis, check VRAM & index kernel notes"<br/>
-              <span style="color:#30d158;">[Jarvis]:</span> "3,540 MB allocated on GPU, sir.<br/>
-              Knowledge Galaxy synced across 102 AST code chunks."<br/><br/>
-              <span style="color:#94a3b8;">Mode: Ambient Voice Active | Latency: 1.74s</span>
+              > "Jarvis, check VRAM &amp; index project docs"<br/>
+              <span style="color:#30d158;">[Jarvis]:</span> "3,540 MB active on GPU, sir.<br/>
+              102 AST code chunks &amp; notes indexed locally."<br/><br/>
+              <span style="color:#94a3b8;">100% Offline | Mode: Ambient Voice Active</span>
             </div>
           </div>
           <div class="mock-win">
-            <div style="font-size:11px; color:#a855f7; font-weight:700; margin-bottom:8px;">MODE & RESOURCE SWITCHER</div>
+            <div style="font-size:11px; color:#a855f7; font-weight:700; margin-bottom:8px;">INSTANT DESKTOP SWITCH</div>
             <div class="mock-code">
-              Command: <strong>Meta + Shift + M</strong><br/>
-              Next State: Apple Cupertino Desktop<br/>
-              VRAM Action: keep_alive: 0 (100% Freed)<br/>
-              Privacy: Mic stream released
+              Shortcut: <strong>Meta + Shift + M</strong><br/>
+              Target: Apple Cupertino / Minimalist Zen<br/>
+              Action: keep_alive: 0 (100% VRAM Freed)<br/>
+              Audio: PipeWire Mic Stream Released
             </div>
           </div>
         </div>
@@ -67,32 +73,50 @@
     } else {
       mockContent.innerHTML = `
         <div class="mock-topbar">
-          <span><strong></strong> &nbsp; Terminal &nbsp; File &nbsp; Edit &nbsp; Software &nbsp; Themes</span>
-          <span>Apple Cupertino Dark · <strong>VRAM 0 MB</strong> · Switch to Jarvis Core</span>
+          <span><strong></strong> &nbsp; Terminal &nbsp; Finder &nbsp; Software &nbsp; Themes</span>
+          <span>Apple Cupertino · <strong>VRAM 0 MB</strong> · Switch to Jarvis Core</span>
         </div>
         <div class="mock-windows">
           <div class="mock-win">
-            <div class="mock-dots"><span style="background:#ff5f56"></span><span style="background:#ffbd2e"></span><span style="background:#27c93f"></span></div>
-            <div class="mock-code">
-              jarvis@jarvis-os:~$ <strong>sudo nala install obs-studio gimp</strong><br/>
-              [OK] Installing Debian Bookworm packages...<br/>
-              jarvis@jarvis-os:~$ <strong>jarvis theme cupertino-light</strong><br/>
-              [SUCCESS] Applied Apple Cupertino Light
+            <div>
+              <div class="mock-win-bar">
+                <div class="mock-dots"><span style="background:#ff5f56"></span><span style="background:#ffbd2e"></span><span style="background:#27c93f"></span></div>
+                <span style="font-size:11px; color:#98989f;">Terminal — zsh</span>
+              </div>
+              <pre id="demo-term-out" class="mock-code">${terminalDemos.nala}</pre>
+            </div>
+            <div class="mock-chips">
+              <button class="mock-chip" data-demo="nala">nala install</button>
+              <button class="mock-chip" data-demo="theme">jarvis theme</button>
+              <button class="mock-chip" data-demo="neofetch">neofetch</button>
+              <button class="mock-chip" data-demo="ai">?? smart shell</button>
             </div>
           </div>
           <div class="mock-win">
-            <div class="mock-dots"><span style="background:#ff5f56"></span><span style="background:#ffbd2e"></span><span style="background:#27c93f"></span></div>
-            <div style="font-size:12px; font-weight:700; margin-bottom:6px;">Debian Software & Gaming Hub</div>
-            <div class="mock-code">
-              • Firefox ESR & Chromium (Installed)<br/>
-              • Steam + Lutris + GameMode (Ready)<br/>
-              • Liquorix 1000Hz Kernel (Active)<br/>
-              • Papirus Vector Icons + Global AppMenu
+            <div>
+              <div class="mock-win-bar">
+                <div class="mock-dots"><span style="background:#ff5f56"></span><span style="background:#ffbd2e"></span><span style="background:#27c93f"></span></div>
+                <span style="font-size:11px; color:#98989f;">Debian Workstation</span>
+              </div>
+              <div class="mock-code">
+                • <strong>ISO Size:</strong> 1.58 GiB (Zstd Level 19)<br/>
+                • <strong>Browsers:</strong> Firefox ESR + Chromium<br/>
+                • <strong>Gaming:</strong> Steam, Lutris, GameMode, Wine<br/>
+                • <strong>Store:</strong> Discover (APT + Flatpak), Synaptic<br/>
+                • <strong>Themes:</strong> Cupertino Light/Dark, Zen, Nordic
+              </div>
             </div>
           </div>
         </div>
         <div class="mock-dock"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       `;
+
+      mockContent.querySelectorAll("[data-demo]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const out = document.getElementById("demo-term-out");
+          if (out) out.textContent = terminalDemos[chip.getAttribute("data-demo")] || "";
+        });
+      });
     }
   };
 
@@ -107,69 +131,28 @@
     });
   }
 
-  // 3. Bind Download URLs (Internet Archive -> Cloudflare R2 -> GitHub Releases Fallback)
-  let primaryIsoUrl = cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases";
-  let mirrorText = "Mirror: GitHub Releases (Ready for Internet Archive direct .iso URL in website/config.js)";
+  // 3. Bind All Verified Download Mirrors
+  const primaryIsoUrl = cfg.internetArchiveIsoUrl || cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0";
+  document.querySelectorAll("[data-iso-download]").forEach((el) => el.setAttribute("href", primaryIsoUrl));
+  document.querySelectorAll("[data-ia-dir]").forEach((el) => el.setAttribute("href", cfg.internetArchiveDirUrl || primaryIsoUrl));
+  document.querySelectorAll("[data-ia-torrent]").forEach((el) => el.setAttribute("href", cfg.internetArchiveTorrentUrl || primaryIsoUrl));
+  document.querySelectorAll("[data-gh-release]").forEach((el) => el.setAttribute("href", cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases/tag/v1.0.0"));
+  document.querySelectorAll("[data-gh-repo]").forEach((el) => el.setAttribute("href", cfg.githubRepoUrl || "https://github.com/10JERRY01/Jarvis-os"));
 
-  if (cfg.internetArchiveIsoUrl) {
-    primaryIsoUrl = cfg.internetArchiveIsoUrl;
-    mirrorText = "Primary Mirror: Internet Archive Direct CDN (.iso)";
-  } else if (cfg.cloudflareR2IsoUrl) {
-    primaryIsoUrl = cfg.cloudflareR2IsoUrl;
-    mirrorText = "Primary Mirror: Cloudflare R2 Global CDN (.iso)";
-  }
-
-  document.querySelectorAll("[data-iso-download]").forEach((el) => {
-    el.setAttribute("href", primaryIsoUrl);
-  });
-  document.querySelectorAll("[data-gh-release]").forEach((el) => {
-    el.setAttribute("href", cfg.githubReleasesUrl || "https://github.com/10JERRY01/Jarvis-os/releases");
-  });
-  document.querySelectorAll("[data-gh-repo]").forEach((el) => {
-    el.setAttribute("href", cfg.githubRepoUrl || "https://github.com/10JERRY01/Jarvis-os");
-  });
   const shaLink = document.getElementById("sha-link");
-  if (shaLink) shaLink.setAttribute("href", cfg.sha256Url || cfg.githubReleasesUrl);
+  if (shaLink) shaLink.setAttribute("href", cfg.sha256Url || cfg.githubSha256Url);
 
-  const mirrorBadge = document.getElementById("mirror-badge-text");
-  if (mirrorBadge) {
-    mirrorBadge.textContent = mirrorText;
-  }
+  const shaTextEl = document.getElementById("sha-hash-text");
+  if (shaTextEl && cfg.sha256Hash) shaTextEl.textContent = cfg.sha256Hash;
 
-  // 4. Bind Support Buttons at end of site (Buy Me a Coffee + Patreon)
+  const sizeLabelEl = document.getElementById("iso-size-label");
+  if (sizeLabelEl && cfg.isoSizeLabel) sizeLabelEl.textContent = cfg.isoSizeLabel;
+
+  // 4. Bind Support Buttons (Buy Me a Coffee + Patreon)
   const bmcBtn = document.getElementById("bmc-btn");
   const patreonBtn = document.getElementById("patreon-btn");
-  const supportNotice = document.getElementById("support-config-note");
-
-  if (bmcBtn) {
-    if (cfg.support && cfg.support.buyMeACoffeeUrl) {
-      bmcBtn.setAttribute("href", cfg.support.buyMeACoffeeUrl);
-    } else {
-      bmcBtn.setAttribute("href", "#support-configure");
-      bmcBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (supportNotice) {
-          supportNotice.textContent = "Buy Me a Coffee URL ready to link: set support.buyMeACoffeeUrl in website/config.js.";
-          supportNotice.style.display = "block";
-        }
-      });
-    }
-  }
-
-  if (patreonBtn) {
-    if (cfg.support && cfg.support.patreonUrl) {
-      patreonBtn.setAttribute("href", cfg.support.patreonUrl);
-    } else {
-      patreonBtn.setAttribute("href", "#support-configure");
-      patreonBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (supportNotice) {
-          supportNotice.textContent = "Patreon URL ready to link: set support.patreonUrl in website/config.js.";
-          supportNotice.style.display = "block";
-        }
-      });
-    }
-  }
+  if (bmcBtn && cfg.support?.buyMeACoffeeUrl) bmcBtn.setAttribute("href", cfg.support.buyMeACoffeeUrl);
+  if (patreonBtn && cfg.support?.patreonUrl) patreonBtn.setAttribute("href", cfg.support.patreonUrl);
 
   // 5. Privacy Consent + EthicalAds / Carbon Ads Loader
   const adContainer = document.getElementById("ad-slot-container");
@@ -179,7 +162,8 @@
 
   const loadDeveloperAds = () => {
     if (!adContainer || !cfg.ads) return;
-    const themeMode = document.documentElement.getAttribute("data-site-theme") === "light" ? "light" : "dark";
+    const isLight = (document.documentElement.getAttribute("data-site-theme") || "").includes("light");
+    const themeMode = isLight ? "light" : "dark";
 
     if (cfg.ads.provider === "ethicalads" && cfg.ads.ethicalAdsPublisherId) {
       adContainer.innerHTML = `<div class="${themeMode}" data-ea-publisher="${cfg.ads.ethicalAdsPublisherId}" data-ea-type="text"></div>`;
@@ -218,14 +202,14 @@
     });
   }
 
-  // Copy checksum snippet helper
+  // Copy SHA-256 checksum helper
   const copyBtn = document.getElementById("copy-verify-btn");
   if (copyBtn) {
     copyBtn.addEventListener("click", () => {
-      const cmd = "sha256sum -c SHA256SUMS.txt";
-      navigator.clipboard?.writeText(cmd);
+      const hashLine = cfg.sha256Hash ? `${cfg.sha256Hash}  ${cfg.isoFilename}` : "sha256sum -c SHA256SUMS.txt";
+      navigator.clipboard?.writeText(hashLine);
       copyBtn.textContent = "Copied!";
-      setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+      setTimeout(() => (copyBtn.textContent = "Copy SHA-256"), 1600);
     });
   }
 })();
