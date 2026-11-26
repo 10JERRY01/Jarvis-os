@@ -303,7 +303,7 @@
       const frame = document.createElement("iframe");
       frame.className = "aads-frame";
       frame.setAttribute("data-aa", unitId);
-      frame.setAttribute("src", `https://ad.a-ads.com/${unitId}?size=Adaptive`);
+      frame.setAttribute("src", `https://acceptable.a-ads.com/${unitId}/?size=Adaptive`);
       frame.setAttribute("title", "Sponsored Advertisement");
       frame.setAttribute("loading", "lazy");
       adContainer.appendChild(frame);

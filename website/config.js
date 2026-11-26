@@ -36,7 +36,7 @@ window.JARVIS_SITE_CONFIG = {
     // Contextual keywords for relevant Linux / Debian / AI developer ads
     keywords: "linux|debian|open-source|local-ai|devtools",
     // Zero-minimum A-ADS numeric ad unit ID (create free at https://aads.com/):
-    aadsUnitId: "",
+    aadsUnitId: "2463366",
     // Optional Carbon Ads keys (if switching provider to "carbon"):
     carbonServe: "",
     carbonPlacement: "",
