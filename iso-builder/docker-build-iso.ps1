@@ -11,7 +11,7 @@ param (
 #   3. repack      (Rapid sub-2-minute in-place ISO patcher)
 # ==============================================================================
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "        JARVIS OS (DEBIAN EDITION) ISO BUILD HARNESS      " -ForegroundColor Cyan
@@ -19,13 +19,12 @@ Write-Host "        Selected Build Engine: $Engine                    " -Foregro
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 # 1. Check if Docker is installed and running
-try {
-    docker info | Out-Null
-    Write-Host "[INFO] Docker daemon detected and responsive." -ForegroundColor Green
-} catch {
+docker info --format '{{.ServerVersion}}' 2>$null | Out-Null
+if ($LASTEXITCODE -ne 0) {
     Write-Host "[ERROR] Docker is not running or not found. Please start Docker Desktop." -ForegroundColor Red
     exit 1
 }
+Write-Host "[INFO] Docker daemon detected and responsive." -ForegroundColor Green
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = (Get-Item "$ScriptDir\..").FullName
@@ -39,6 +38,10 @@ if (-not (Test-Path $OutDir)) {
 # 2. Build the builder image
 Write-Host "[INFO] Building Debian live-build container image (jarvis-os-builder)..." -ForegroundColor Yellow
 docker build -t jarvis-os-builder -f "$ScriptDir\Dockerfile.builder" "$ScriptDir"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Docker image build failed." -ForegroundColor Red
+    exit 1
+}
 
 # 3. Select target runner script based on engine
 $TargetScript = switch ($Engine) {
@@ -53,6 +56,10 @@ docker run --rm --privileged `
     -w /workspace/iso-builder `
     jarvis-os-builder `
     /bin/bash $TargetScript
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] ISO build script exited with code $LASTEXITCODE." -ForegroundColor Red
+    exit $LASTEXITCODE
+}
 
 Write-Host "==========================================================" -ForegroundColor Green
 Write-Host " [INFO] Build process completed. Check output directory:" -ForegroundColor Green
