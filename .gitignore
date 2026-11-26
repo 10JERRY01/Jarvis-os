@@ -13,6 +13,8 @@
 *.iso.part.*
 *.squashfs
 *.img
+dist/
+*.zip
 iso-builder/out/*.iso
 iso-builder/out/*.txt
 iso-builder/.build/

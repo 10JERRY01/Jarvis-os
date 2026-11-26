@@ -159,13 +159,20 @@
   const sizeLabelEl = document.getElementById("iso-size-label");
   if (sizeLabelEl && cfg.isoSizeLabel) sizeLabelEl.textContent = cfg.isoSizeLabel;
 
-  // 4. Bind Support Buttons (Buy Me a Coffee + Patreon)
+  // 4. Bind Support Buttons (Buy Me a Coffee + Supporter Pack + Patreon + GitHub Sponsors)
   const bmcBtn = document.getElementById("bmc-btn");
   const patreonBtn = document.getElementById("patreon-btn");
+  const packBtn = document.getElementById("supporter-pack-btn");
+  const packPriceEl = document.getElementById("supporter-pack-price");
+  const ghSponsorsEl = document.getElementById("gh-sponsors-link");
   if (bmcBtn && cfg.support?.buyMeACoffeeUrl) bmcBtn.setAttribute("href", cfg.support.buyMeACoffeeUrl);
   if (patreonBtn && cfg.support?.patreonUrl) patreonBtn.setAttribute("href", cfg.support.patreonUrl);
+  if (packBtn && cfg.support?.supporterPackUrl) packBtn.setAttribute("href", cfg.support.supporterPackUrl);
+  if (packPriceEl && cfg.support?.supporterPackPrice) packPriceEl.textContent = cfg.support.supporterPackPrice;
+  if (ghSponsorsEl && cfg.support?.githubSponsorsUrl) ghSponsorsEl.setAttribute("href", cfg.support.githubSponsorsUrl);
 
-  // 5. Privacy-First Contextual Ads (EthicalAds Primary + Carbon Ads Fallback)
+  // 5. Multi-Provider Day-1 + Scaled Contextual Ad Loader (EthicalAds / A-ADS / Carbon / Sponsor Rotation)
+  const adLabelEl = document.getElementById("ad-slot-label");
   const adContainer = document.getElementById("ad-slot-container");
   const cookieBanner = document.getElementById("cookie-banner");
   const acceptBtn = document.getElementById("cookie-accept");
@@ -175,6 +182,7 @@
 
   const setOptedOutNotice = () => {
     if (!adContainer) return;
+    if (adLabelEl) adLabelEl.textContent = "Sponsored · Opted Out";
     adContainer.textContent = "";
     const msg = document.createElement("span");
     msg.className = "ad-fallback";
@@ -186,12 +194,85 @@
     adContainer.appendChild(msg);
   };
 
+  const resolveAdProvider = (adsCfg) => {
+    if (!adsCfg) return "sponsor";
+    const requested = adsCfg.provider || "auto";
+    if (requested !== "auto") return requested;
+    if (adsCfg.ethicalAdsPublisherId) return "ethicalads";
+    if (/^\d+$/.test(String(adsCfg.aadsUnitId || "").trim())) return "aads";
+    if (adsCfg.carbonServe && adsCfg.carbonPlacement) return "carbon";
+    return "sponsor";
+  };
+
+  let sponsorIndex = 0;
+  try {
+    const cards = cfg.ads?.dayOneCards || [];
+    if (cards.length) {
+      const savedIdx = parseInt(localStorage.getItem("jarvis_sponsor_idx") || "0", 10);
+      sponsorIndex = Number.isFinite(savedIdx) ? savedIdx % cards.length : 0;
+      localStorage.setItem("jarvis_sponsor_idx", String((sponsorIndex + 1) % cards.length));
+    }
+  } catch (_) {}
+
+  const renderDayOneCard = (idx) => {
+    const cards = cfg.ads?.dayOneCards || [];
+    if (!adContainer || !cards.length) return;
+    const safeIdx = ((idx % cards.length) + cards.length) % cards.length;
+    sponsorIndex = safeIdx;
+    const card = cards[safeIdx];
+    if (adLabelEl) adLabelEl.textContent = card.badge || "Sponsored · Community & Partners";
+
+    adContainer.textContent = "";
+    const row = document.createElement("div");
+    row.className = "sponsor-card-row";
+
+    const copy = document.createElement("div");
+    copy.className = "sponsor-copy";
+    const h = document.createElement("div");
+    h.className = "sponsor-headline";
+    h.textContent = card.headline || "";
+    const d = document.createElement("div");
+    d.className = "sponsor-desc";
+    d.textContent = card.description || "";
+    copy.appendChild(h);
+    copy.appendChild(d);
+
+    const actions = document.createElement("div");
+    actions.className = "sponsor-actions";
+    if (cards.length > 1) {
+      const nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.className = "sponsor-next-btn";
+      nextBtn.setAttribute("aria-label", "Next sponsor offer");
+      nextBtn.textContent = "Next ›";
+      nextBtn.addEventListener("click", () => renderDayOneCard(sponsorIndex + 1));
+      actions.appendChild(nextBtn);
+    }
+
+    const cta = document.createElement("a");
+    cta.className = "btn btn-primary btn-sm";
+    cta.textContent = card.ctaLabel || "Learn More";
+    const href = String(card.ctaUrl || "#support");
+    cta.setAttribute("href", href);
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      cta.setAttribute("target", "_blank");
+      cta.setAttribute("rel", "noopener");
+    }
+    actions.appendChild(cta);
+
+    row.appendChild(copy);
+    row.appendChild(actions);
+    adContainer.appendChild(row);
+  };
+
   const loadDeveloperAds = () => {
     if (!adContainer || !cfg.ads) return;
     const themeId = document.documentElement.getAttribute("data-site-theme") || "cupertino-dark";
     const themeMode = isLightTheme(themeId) ? "light" : "dark";
+    const activeProvider = resolveAdProvider(cfg.ads);
 
-    if (cfg.ads.provider === "ethicalads" && cfg.ads.ethicalAdsPublisherId) {
+    if (activeProvider === "ethicalads" && cfg.ads.ethicalAdsPublisherId) {
+      if (adLabelEl) adLabelEl.textContent = "Sponsored · EthicalAds Developer Network";
       adContainer.textContent = "";
       const slot = document.createElement("div");
       slot.className = `flat ${themeMode}`;
@@ -212,14 +293,35 @@
       } else if (window.ethicalads && typeof window.ethicalads.load === "function") {
         window.ethicalads.load();
       }
-    } else if (cfg.ads.provider === "carbon" && cfg.ads.carbonServe && cfg.ads.carbonPlacement) {
+      return;
+    }
+
+    if (activeProvider === "aads" && /^\d+$/.test(String(cfg.ads.aadsUnitId || "").trim())) {
+      const unitId = String(cfg.ads.aadsUnitId).trim();
+      if (adLabelEl) adLabelEl.textContent = "Sponsored · A-ADS Privacy Network";
+      adContainer.textContent = "";
+      const frame = document.createElement("iframe");
+      frame.className = "aads-frame";
+      frame.setAttribute("data-aa", unitId);
+      frame.setAttribute("src", `https://ad.a-ads.com/${unitId}?size=Adaptive`);
+      frame.setAttribute("title", "Sponsored Advertisement");
+      frame.setAttribute("loading", "lazy");
+      adContainer.appendChild(frame);
+      return;
+    }
+
+    if (activeProvider === "carbon" && cfg.ads.carbonServe && cfg.ads.carbonPlacement) {
+      if (adLabelEl) adLabelEl.textContent = "Sponsored · Carbon Ads";
       adContainer.textContent = "";
       const s = document.createElement("script");
       s.async = true;
       s.id = "_carbonads_js";
       s.src = `https://cdn.carbonads.com/carbon.js?serve=${encodeURIComponent(cfg.ads.carbonServe)}&placement=${encodeURIComponent(cfg.ads.carbonPlacement)}`;
       adContainer.appendChild(s);
+      return;
     }
+
+    renderDayOneCard(sponsorIndex);
   };
 
   const syncPrivacyUi = (consentState) => {

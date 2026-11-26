@@ -20,27 +20,64 @@ window.JARVIS_SITE_CONFIG = {
   sha256Url: "https://archive.org/download/jarvis-os-debootstrap-amd64.hybrid/SHA256SUMS.txt",
   githubSha256Url: "https://github.com/10JERRY01/Jarvis-os/releases/download/v1.0.0/SHA256SUMS.txt",
 
-  // 2. Privacy-First Developer Ad Network (EthicalAds Primary + Optional Carbon Fallback)
+  // 2. Day-1 + Scaled Monetization Engine
+  // provider modes:
+  // - "auto"       : Uses EthicalAds if ID set -> else A-ADS if aadsUnitId set -> else rotates Day-1 cards cleanly
+  // - "ethicalads" : EthicalAds only (~50k/mo guideline)
+  // - "carbon"     : Carbon Ads only (~10k/mo min, exclusive)
+  // - "aads"       : A-ADS zero-minimum banner (paste numeric ad unit ID from aads.com)
+  // - "sponsor"    : Rotates Direct Sponsor / Supporter Pack / Affiliate cards from Day 1
   ads: {
-    provider: "ethicalads",
+    provider: "auto",
     // Paste your EthicalAds Publisher ID from https://www.ethicalads.io/publishers/ (e.g. "jarvis-os")
     ethicalAdsPublisherId: "",
     // Placement format: "text" (minimalist banner) or "image" (card with logo)
     ethicalAdsType: "text",
     // Contextual keywords for relevant Linux / Debian / AI developer ads
     keywords: "linux|debian|open-source|local-ai|devtools",
+    // Zero-minimum A-ADS numeric ad unit ID (create free at https://aads.com/):
+    aadsUnitId: "",
     // Optional Carbon Ads keys (if switching provider to "carbon"):
     carbonServe: "",
     carbonPlacement: "",
-    // EthicalAds is cookie-free contextual by default; set true to hold ads until click
+    // Cookie-free contextual ads & native sponsor cards load automatically unless opted out
     requireConsentClick: false,
+    // Day-1 rotated cards shown automatically until EthicalAds / A-ADS / Carbon IDs are active:
+    // Tip: Replace card 2/3 URLs with DigitalOcean, Hetzner, or Vultr affiliate links anytime.
+    dayOneCards: [
+      {
+        badge: "Supporter Extra · Zero Minimum",
+        headline: "Unlock the Jarvis OS 5K Wallpaper & Minimalist Dotfile Pack ($5+)",
+        description: "15 exclusive 5K, Ultrawide & Mobile wallpapers across all 5 themes plus Starship, Fastfetch & Kitty presets.",
+        ctaLabel: "Get Theme Pack",
+        ctaUrl: "https://buymeacoffee.com/jerrymice45",
+      },
+      {
+        badge: "Direct Sponsorship Open",
+        headline: "Reach Linux Developers, Gamers & Offline AI Builders",
+        description: "Zero tracking scripts. Feature your DevTool, Cloud VPS, or Linux hardware above the fold on Home & Docs.",
+        ctaLabel: "Sponsor Jarvis OS",
+        ctaUrl: "https://www.patreon.com/Jerry42",
+      },
+      {
+        badge: "Community Backed · Early Access",
+        headline: "Fuel Overnight Liquorix Kernel & Debian v1.x ISO Builds",
+        description: "Join monthly backers on Patreon for early ISO drops, roadmap voting, and custom Cupertino theme packs.",
+        ctaLabel: "Join on Patreon",
+        ctaUrl: "https://www.patreon.com/Jerry42",
+      },
+    ],
   },
 
-  // 3. Creator Support Links (Rendered cleanly at the end of the website)
+  // 3. Creator Support & Digital Extras (Rendered cleanly at the end of the website)
   support: {
     buyMeACoffeeUrl: "https://buymeacoffee.com/jerrymice45",
     buyMeACoffeeHandle: "jerrymice45",
     patreonUrl: "https://www.patreon.com/Jerry42",
     patreonHandle: "Jerry42",
+    githubSponsorsUrl: "https://github.com/sponsors/10JERRY01",
+    // Replace with your direct Buy Me a Coffee Extras or Gumroad item link after uploading dist/jarvis-os-supporter-pack-v1.0.zip:
+    supporterPackUrl: "https://buymeacoffee.com/jerrymice45",
+    supporterPackPrice: "$5+ Pay What You Want",
   },
 };
