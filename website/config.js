@@ -47,10 +47,10 @@ window.JARVIS_SITE_CONFIG = {
     dayOneCards: [
       {
         badge: "Supporter Extra · Zero Minimum",
-        headline: "Unlock the Jarvis OS 5K Wallpaper & Minimalist Dotfile Pack ($5+)",
+        headline: "Unlock the Jarvis OS 5K Wallpaper & Minimalist Dotfile Pack ($5)",
         description: "15 exclusive 5K, Ultrawide & Mobile wallpapers across all 5 themes plus Starship, Fastfetch & Kitty presets.",
-        ctaLabel: "Get Theme Pack",
-        ctaUrl: "https://buymeacoffee.com/jerrymice45",
+        ctaLabel: "Get Theme Pack ($5)",
+        ctaUrl: "https://buymeacoffee.com/jerrymice45/e/603108",
       },
       {
         badge: "Direct Sponsorship Open",
@@ -76,8 +76,8 @@ window.JARVIS_SITE_CONFIG = {
     patreonUrl: "https://www.patreon.com/Jerry42",
     patreonHandle: "Jerry42",
     githubSponsorsUrl: "https://github.com/sponsors/10JERRY01",
-    // Replace with your direct Buy Me a Coffee Extras or Gumroad item link after uploading dist/jarvis-os-supporter-pack-v1.0.zip:
-    supporterPackUrl: "https://buymeacoffee.com/jerrymice45",
-    supporterPackPrice: "$5+ Pay What You Want",
+    // Live Buy Me a Coffee Shop / Extra URL for dist/jarvis-os-supporter-pack-v1.0.zip:
+    supporterPackUrl: "https://buymeacoffee.com/jerrymice45/e/603108",
+    supporterPackPrice: "$5 Digital Extra",
   },
 };
