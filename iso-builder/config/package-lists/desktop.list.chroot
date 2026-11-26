@@ -25,7 +25,7 @@ chromium
 
 # Must-Have GUI Tools, App Store & Media
 vlc
-spectacle
+kde-spectacle
 gparted
 kcalc
 kolourpaint
@@ -52,7 +52,7 @@ qt5-style-kvantum
 appmenu-gtk3-module
 appmenu-gtk2-module
 libdbusmenu-gtk3-4
-kdeplasma-addons
+plasma-widgets-addons
 kwin-addons
 
 # Qt / GTK Theming & Integration

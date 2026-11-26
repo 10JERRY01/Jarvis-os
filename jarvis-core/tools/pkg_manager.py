@@ -40,6 +40,7 @@ SOFTWARE_CATALOG: List[Dict[str, Any]] = [
     {"id": "podman", "name": "Podman + Distrobox", "category": "Developer", "desc": "Rootless containers & multi-distro terminal sandboxes", "source": "apt"},
     {"id": "build-essential", "name": "Build Essential & CMake", "category": "Developer", "desc": "GCC, G++, Clang, Make, Ninja & GDB toolchain", "source": "apt"},
     {"id": "vlc", "name": "VLC Media Player", "category": "Media", "desc": "Universal offline audio & video player", "source": "apt"},
+    {"id": "kde-spectacle", "name": "Spectacle Screenshot", "category": "System", "desc": "KDE desktop screenshot & Screen Vision capture utility", "source": "apt"},
     {"id": "gimp", "name": "GIMP", "category": "Creative", "desc": "GNU Image Manipulation Program for photo & UI editing", "source": "apt"},
     {"id": "obs-studio", "name": "OBS Studio", "category": "Creative", "desc": "High-performance Wayland screen recorder & streaming studio", "source": "apt"},
     {"id": "blender", "name": "Blender 3D", "category": "Creative", "desc": "GPU-accelerated 3D modeling, animation & rendering suite", "source": "apt"},

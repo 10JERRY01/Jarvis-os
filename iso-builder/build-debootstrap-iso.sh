@@ -29,7 +29,7 @@ fi
 
 cleanup() {
     echo "[INFO] Cleaning up mount points..."
-    for m in /dev/pts /dev /proc /sys; do
+    for m in /run /dev/shm /dev/pts /dev /proc /sys; do
         if mountpoint -q "${CHROOT_DIR}${m}" 2>/dev/null; then
             umount -l "${CHROOT_DIR}${m}" || true
         fi
@@ -60,14 +60,22 @@ else
     echo "[INFO] Existing chroot base detected. Skipping initial debootstrap."
 fi
 
-# 3. Mount Virtual Filesystems
-echo "[INFO] Binding host filesystems into target chroot..."
+# 3. Prevent chroot service startup failures (policy-rc.d) & Mount Virtual Filesystems
+echo "[INFO] Configuring policy-rc.d and binding virtual filesystems..."
+cat << 'POLICY' > "${CHROOT_DIR}/usr/sbin/policy-rc.d"
+#!/bin/sh
+exit 101
+POLICY
+chmod +x "${CHROOT_DIR}/usr/sbin/policy-rc.d"
+
+mkdir -p "${CHROOT_DIR}/dev/pts" "${CHROOT_DIR}/dev/shm" "${CHROOT_DIR}/proc" "${CHROOT_DIR}/sys" "${CHROOT_DIR}/run"
 mount --bind /dev "${CHROOT_DIR}/dev"
 mount --bind /dev/pts "${CHROOT_DIR}/dev/pts"
+mount -t tmpfs tmpfs "${CHROOT_DIR}/dev/shm"
 mount -t proc proc "${CHROOT_DIR}/proc"
 mount -t sysfs sys "${CHROOT_DIR}/sys"
+mount -t tmpfs tmpfs "${CHROOT_DIR}/run"
 
-# Copy DNS config
 cp /etc/resolv.conf "${CHROOT_DIR}/etc/resolv.conf"
 
 # 4. Configure Repositories & Install Packages inside Chroot
@@ -78,11 +86,6 @@ deb http://security.debian.org/debian-security ${DEBIAN_RELEASE}-security main c
 deb ${DEBIAN_MIRROR} ${DEBIAN_RELEASE}-backports main contrib non-free non-free-firmware
 EOF
 
-# Add Liquorix Gaming Kernel Repository
-cat << 'EOF' > "${CHROOT_DIR}/etc/apt/sources.list.d/liquorix.list"
-deb [trusted=yes] http://liquorix.net/debian bookworm main
-EOF
-
 echo "[INFO] Configuring system packages inside chroot..."
 chroot "${CHROOT_DIR}" /bin/bash << 'EOF'
 export DEBIAN_FRONTEND=noninteractive
@@ -91,8 +94,11 @@ export DEBIAN_FRONTEND=noninteractive
 dpkg --add-architecture i386
 apt-get update
 
-# Core Live Boot & Hardware Packages
+# Core Live Boot, Firmware & Hardware Packages (Verified Debian 12 Bookworm)
 apt-get install -y --no-install-recommends \
+    ca-certificates \
+    gnupg \
+    locales \
     live-boot \
     live-boot-initramfs-tools \
     live-config \
@@ -121,7 +127,11 @@ apt-get install -y --no-install-recommends \
     pipewire-pulse \
     rtkit
 
-# Gaming & Graphics
+# Add Liquorix Gaming Kernel Repository (HTTPS after ca-certificates)
+echo "deb [trusted=yes] https://liquorix.net/debian bookworm main" > /etc/apt/sources.list.d/liquorix.list
+apt-get update || rm -f /etc/apt/sources.list.d/liquorix.list
+
+# Gaming & Graphics Stack (Verified Debian 12 Bookworm)
 apt-get install -y --no-install-recommends \
     mesa-vulkan-drivers \
     mesa-vulkan-drivers:i386 \
@@ -139,7 +149,7 @@ apt-get install -y --no-install-recommends \
     winetricks \
     flatpak
 
-# Lightweight Fast Desktop (KDE Plasma), Browsers, App Store & Global Menu
+# Lightweight Fast Desktop (KDE Plasma Wayland), Browsers, App Store & Global Menu
 apt-get install -y --no-install-recommends \
     kde-plasma-desktop \
     plasma-workspace-wayland \
@@ -155,7 +165,7 @@ apt-get install -y --no-install-recommends \
     firefox-esr \
     chromium \
     vlc \
-    spectacle \
+    kde-spectacle \
     gparted \
     kcalc \
     synaptic \
@@ -167,7 +177,7 @@ apt-get install -y --no-install-recommends \
     qt5-style-kvantum \
     appmenu-gtk3-module \
     libdbusmenu-gtk3-4 \
-    kdeplasma-addons \
+    plasma-widgets-addons \
     fonts-firacode \
     fonts-jetbrains-mono \
     fonts-inter
@@ -204,7 +214,7 @@ for opt_pkg in steam-installer fastfetch vkbasalt; do
     apt-get install -y --no-install-recommends "$opt_pkg" || true
 done
 
-# Kernel Installation: Liquorix low-latency or fallback to Debian standard
+# Kernel Installation: Liquorix low-latency or fallback to Debian Bookworm standard
 apt-get install -y linux-image-liquorix-amd64 linux-headers-liquorix-amd64 || \
 apt-get install -y linux-image-amd64
 
@@ -224,6 +234,9 @@ User=jarvis
 Session=plasmawayland
 AUTOLOGIN
 
+# Remove chroot policy-rc.d guard before imaging
+rm -f /usr/sbin/policy-rc.d
+
 # Clean apt cache
 apt-get clean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -239,7 +252,7 @@ rm -f "${CHROOT_DIR}/opt/jarvis-core/state_mode.json" "${CHROOT_DIR}/opt/jarvis-
 cp -r "${PROJECT_ROOT}/jarvis-hud/"* "${CHROOT_DIR}/opt/jarvis-hud/"
 cp -r "${PROJECT_ROOT}/calamares-config/"* "${CHROOT_DIR}/etc/calamares/"
 
-# Copy Chroot Overlays (Minimalist Papirus/Slate dotfiles, 4K Wallpapers, Desktop entries)
+# Copy Chroot Overlays (Minimalist Papirus/Cupertino dotfiles, 4K Wallpapers, Desktop entries)
 if [ -d "${PROJECT_ROOT}/iso-builder/config/includes.chroot" ]; then
     cp -r "${PROJECT_ROOT}/iso-builder/config/includes.chroot/"* "${CHROOT_DIR}/"
     if [ -d "${CHROOT_DIR}/home/jarvis" ]; then
@@ -255,6 +268,7 @@ if [ -f "${PROJECT_ROOT}/iso-builder/config/package-lists/user-custom.list.chroo
         CUSTOM=$(grep -vE "^\s*(#|$)" /tmp/user-custom.pkgs | tr "\n" " ")
         if [ -n "$CUSTOM" ]; then
             apt-get update && apt-get install -y --no-install-recommends $CUSTOM || true
+            apt-get clean && rm -rf /var/lib/apt/lists/*
         fi
         rm -f /tmp/user-custom.pkgs
     '
@@ -294,6 +308,9 @@ mksquashfs "${CHROOT_DIR}" "${ISO_DIR}/live/filesystem.squashfs" \
     -noappend \
     -e boot/vmlinuz* -e boot/initrd.img*
 
+# Free chroot scratch space prior to ISO mastering
+rm -rf "${CHROOT_DIR}"
+
 # 9. Configure GRUB for BIOS & UEFI Hybrid Boot
 cat << 'EOF' > "${ISO_DIR}/boot/grub/grub.cfg"
 set default="0"
@@ -315,6 +332,8 @@ echo "[INFO] Packaging hybrid ISO via grub-mkrescue & xorriso..."
 grub-mkrescue -o "${OUT_DIR}/${ISO_NAME}" "${ISO_DIR}" \
     -- -volid "JARVIS_OS" \
     -iso-level 3
+
+rm -rf "${BUILD_DIR}"
 
 echo "=========================================================="
 echo " [SUCCESS] Debootstrap Live ISO Built Successfully!"
